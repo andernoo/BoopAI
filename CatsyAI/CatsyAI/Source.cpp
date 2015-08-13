@@ -12,13 +12,16 @@ World *world = NULL;
 
 void render()
 {
+	//cout << "Rand: " << (rand() / (double) (RAND_MAX + 1)) << endl;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	world->run();
+	glutSwapBuffers();
 }
 
 
 int main(int argc, char *argv[])
 {
+	srand(clock());
 	world = new World(20);
 
 	glutInit(&argc, argv);
@@ -27,16 +30,13 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("AnooGame");
 
-	glOrtho(-40, 40, -30, 30, 1, -1);
+	glOrtho(0, (WIDTH), 0, (HEIGHT), 1, -1);
+	//glOrtho(-40, 40, -30, 30, 1, -1);
 
+	glPointSize(5.0f);
 	glutDisplayFunc(render);
 	glutIdleFunc(render);
-
-	glEnable(GL_BLEND);
-
-	glClearColor(0.8, 0.8, 0.8, 0.0f);
-	glLineWidth(1);
-
+	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glutMainLoop();
 
 	return 1;

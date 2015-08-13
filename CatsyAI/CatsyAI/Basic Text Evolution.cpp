@@ -100,7 +100,7 @@ void mate(ga_vector &population, ga_vector &buffer)
 		buffer[i].str = population[i1].str.substr(0, spos) +
 			population[i2].str.substr(spos, esize - spos);
 
-		if (rand() < genes[1]) mutate(buffer[i]);
+		if ((rand() / (double) (RAND_MAX + 1)) < genes[1]) mutate(buffer[i]);
 	}
 }
 

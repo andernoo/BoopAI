@@ -1,7 +1,8 @@
 #pragma once
+#include <iostream>
 
-#define WIDTH 640
-#define HEIGHT 480
+#define WIDTH 800
+#define HEIGHT 600
 
 struct Point
 {
@@ -11,6 +12,12 @@ struct Point
 	Point(float x = 0, float y = 0)
 		: x(x), y(y)
 	{
+	}
+
+	void normalise()
+	{
+		x = (x - -WIDTH) * (1 - -1) / (WIDTH - -WIDTH) + -1;
+		y = (y - -HEIGHT) * (1 - -1) / (HEIGHT - -HEIGHT) + -1;
 	}
 
 	// assignment operator modifies object, therefore non-const
@@ -24,6 +31,7 @@ struct Point
 	// plusequals
 	void operator+=(const Point& a)
 	{
+		//std::cout << "X: " << x << std::endl << "New X: " << a.x << std::endl;
 		x += a.x;
 		y += a.y;
 	}
@@ -33,7 +41,6 @@ struct Point
 	{
 		return &Point(a.x + x, a.y + y);
 	}
-
 
 	// equality comparison. doesn't modify object. therefore const.
 	bool operator==(const Point& a) const

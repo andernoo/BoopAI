@@ -2,14 +2,15 @@
 #include "DNA.h"
 #include "Point.h"
 #include "Food.h"
+#include "NeuralNetwork.h"
 
 class Boop {
 public:
+	NeuralNetwork nn;
 	Point *location; // Location
+	Point *target;
 	DNA *dna;          // DNA
 	float health;     // Life timer
-	int xoff;       // For perlin noise
-	int yoff;
 	// DNA will determine size and maxspeed
 	float r;
 	float maxspeed;
@@ -17,7 +18,7 @@ public:
 	// Create a "boop" creature
 	Boop(Point *l, DNA *dna_);
 
-	void run();
+	void run(Food *f);
 
 	// A boop can find food and eat it
 	void eat(Food *f);
@@ -26,7 +27,7 @@ public:
 	Boop *reproduce();
 
 	// Method to update location
-	void update();
+	void update(Food *f);
 
 	// Wraparound
 	void borders();

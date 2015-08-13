@@ -20,4 +20,6 @@ public:
 
 	// Display the food
 	void run();
+
+	Point *getClosest(Point *l);
 };
