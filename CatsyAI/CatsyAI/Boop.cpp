@@ -78,7 +78,7 @@ void Boop::borders() {
 
 // Method to display
 void Boop::display() {
-	gDotTexture.render(mPosX, mPosY);
+
 }
 
 // Death

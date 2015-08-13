@@ -1,7 +1,7 @@
 #pragma once
 
-#define WIDTH 200
-#define HEIGHT 200
+#define WIDTH 640
+#define HEIGHT 480
 
 struct Point
 {

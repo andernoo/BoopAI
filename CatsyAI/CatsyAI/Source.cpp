@@ -5,75 +5,39 @@
 #include <time.h>					// for random seed
 #include <math.h>					// for abs()
 #include "World.h"
-
-//Using SDL and standard IO
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <stdio.h>
+#include <GL\freeglut.h>
 
 using namespace std;
+World *world = NULL;
 
-//Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+void render()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	world->run();
+}
+
 
 int main(int argc, char *argv[])
 {
-	cout << "Hello World!" << endl;
-	//The window we'll be rendering to
-	SDL_Window* window = NULL;
+	world = new World(20);
 
-	//The surface contained by the window
-	SDL_Surface* screenSurface = NULL;
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowPosition(100, 100);
+	glutInitWindowSize(WIDTH, HEIGHT);
+	glutCreateWindow("AnooGame");
 
-	//Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-	}
-	else
-	{
-		//Create window
-		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (window == NULL)
-		{
-			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		}
-		else
-		{
-			//Get window surface
-			screenSurface = SDL_GetWindowSurface(window);
+	glOrtho(-40, 40, -30, 30, 1, -1);
 
-			//Fill the surface white
-			SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+	glutDisplayFunc(render);
+	glutIdleFunc(render);
 
-			//Update the surface
-			SDL_UpdateWindowSurface(window);
+	glEnable(GL_BLEND);
 
-			//Wait two seconds
-			SDL_Delay(2000);
+	glClearColor(0.8, 0.8, 0.8, 0.0f);
+	glLineWidth(1);
 
-			World *world = new World(20);
-			while (true) {
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderClear(gRenderer);
+	glutMainLoop();
 
-				//Render objects
-				world->run();
-
-				//Update screen
-				SDL_RenderPresent(gRenderer);
-				
-			}
-		}
-	}
-
-	//Destroy window
-	SDL_DestroyWindow(window);
-
-	//Quit SDL subsystems
-	SDL_Quit();
-
-	return 0;
+	return 1;
 }
