@@ -3,11 +3,12 @@
 #include "Point.h"
 #include "Food.h"
 #include "NeuralNetwork.h"
+#include <ctime>
 
 class Boop {
 	const double DegToRad = 3.14159265 / 180;
 public:
-	float angle;
+	int foodEaten;
 	NeuralNetwork nn;
 	Point *location; // Location
 	Point *target;
@@ -16,6 +17,8 @@ public:
 	// DNA will determine size and maxspeed
 	float r;
 	float maxspeed;
+	float survived;
+	std::clock_t spawned;
 
 	// Create a "boop" creature
 	Boop(Point *l, DNA *dna_);
@@ -26,7 +29,7 @@ public:
 	void eat(Food *f);
 
 	// At any moment there is a teeny, tiny chance a boop will reproduce
-	Boop *reproduce();
+	Boop *reproduce(Boop *parent);
 
 	// Method to update location
 	void update(Food *f);

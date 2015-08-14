@@ -14,12 +14,13 @@ float map(float x, float in_min, float in_max, float out_min, float out_max)
 Boop::Boop(Point *l, DNA *dna_) {
 	location = l;
 	health = 200;
-	angle = 0;
+	spawned = std::clock();
+	foodEaten = 0;
 	dna = dna_;
 	// Gene 0 determines maxspeed and r
 	// The bigger the boop, the slower it is
-	r = map(dna->genes[0], 0, 1, 1, 30);
-	maxspeed = map(r, 1, 50, 15, 1);
+	r = 5;
+	maxspeed = 7;
 }
 
 void Boop::run(Food *f) {
@@ -34,7 +35,10 @@ void Boop::eat(Food *f) {
 	for (auto i = f->food.begin(); i != f->food.end();) {
 		// If we are, juice up our strength!
 		if (pow(((*i)->x - location->x), 2) + pow(((*i)->y - location->y), 2) < pow(r, 2)) {
-			health += 100;
+			health += 200;
+			foodEaten++;
+			if (health > 1000)
+				health = 1000;
 			i = f->food.erase(i);
 		}
 		else {
@@ -44,14 +48,25 @@ void Boop::eat(Food *f) {
 }
 
 // At any moment there is a teeny, tiny chance a boop will reproduce
-Boop *Boop::reproduce() {
+Boop *Boop::reproduce(Boop *parent) {
 	// Child is exact copy of single parent
 	DNA *childDNA = dna->copy();
-	// Child DNA can mutate
-	childDNA->mutate(0.01);
 	Point *location = new Point(rand() % WIDTH, rand() % HEIGHT);
 	Boop *newBoop = new Boop(location, childDNA);
-	newBoop->nn.PutWeights(nn.GetWeights());
+	std::vector<double> mother = nn.GetWeights();
+	std::vector<double> father = parent->nn.GetWeights();
+	std::vector<double> newweights;
+	for (int i = 0; i != mother.size(); i++)
+	{
+		if (rand() % 1000 < 500)
+		{
+			newweights.push_back(mother.at(i));
+		}
+		else {
+			newweights.push_back(father.at(i));
+		}
+	}
+	newBoop->nn.PutWeights(newweights);
 	newBoop->nn.mutateWeights();
 	return newBoop;
 }
@@ -64,19 +79,22 @@ void Boop::update(Food *f) {
 
 	//add in vector to closest food
 	target = f->getClosest(location);
-	//target->normalise();
-	inputs.push_back(target->x);
-	inputs.push_back(target->y);
+	if (target == NULL)
+	{
+		target = new Point(location->x, location->y);
+	}
+	inputs.push_back(target->x - location->x);
+	inputs.push_back(target->y - location->y);
 
 	//update the brain and get feedback
 	std::vector<double> output = nn.update(inputs);
 	if (output.size() < 2)
 		return;
-	float vx = map(output[0], 0, 1, -maxspeed, maxspeed);
-	float vy = map(output[1], 0, 1, -maxspeed, maxspeed);
+	float vx = map(output[0] - output[1], -1, 1, -maxspeed, maxspeed);
+	float vy = map(output[2] - output[3], -1, 1, -maxspeed, maxspeed);
 	*location += Point(vx, vy);
 	// Death always looming
-	health -= .4;
+	health -= 0.8;
 }
 
 // Wraparound
@@ -84,22 +102,22 @@ void Boop::borders() {
 	if (location->x < r)
 	{
 		location->x = r;
-		health -= 10;
+		health -= 100;
 	}
-	if (location->y < r) 
+	if (location->y < r)
 	{
-		location->y = r; 
-		health -= 10;
+		location->y = r;
+		health -= 100;
 	}
-	if (location->x > WIDTH - r) 
-	{ 
-		location->x = WIDTH - r; 
-		health -= 10; 
+	if (location->x > WIDTH - r)
+	{
+		location->x = WIDTH - r;
+		health -= 100;
 	}
-	if (location->y > HEIGHT - r) 
-	{ 
-		location->y = HEIGHT - r; 
-		health -= 10;
+	if (location->y > HEIGHT - r)
+	{
+		location->y = HEIGHT - r;
+		health -= 100;
 	}
 }
 

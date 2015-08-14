@@ -27,7 +27,7 @@ void Food::run() {
 	}
 
 	// There's a small chance food will appear randomly
-	if ((rand() / (double) (RAND_MAX + 1)) < 0.02) {
+	if ((rand() / (double) (RAND_MAX + 1)) < 0.05) {
 		food.push_back(new Point(rand() % WIDTH, rand() % HEIGHT));
 	}
 }
@@ -36,7 +36,7 @@ Point *Food::getClosest(Point *l)
 {
 	double closest_so_far = 99999;
 
-	Point *vClosestObject = new Point(0,0);
+	Point *vClosestObject = NULL;
 
 	//cycle through mines to find closest
 	for (int i = 0; i<food.size(); i++)
