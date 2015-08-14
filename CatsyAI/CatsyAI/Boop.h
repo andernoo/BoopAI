@@ -5,7 +5,9 @@
 #include "NeuralNetwork.h"
 
 class Boop {
+	const double DegToRad = 3.14159265 / 180;
 public:
+	float angle;
 	NeuralNetwork nn;
 	Point *location; // Location
 	Point *target;

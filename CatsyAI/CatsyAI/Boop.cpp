@@ -14,6 +14,7 @@ float map(float x, float in_min, float in_max, float out_min, float out_max)
 Boop::Boop(Point *l, DNA *dna_) {
 	location = l;
 	health = 200;
+	angle = 0;
 	dna = dna_;
 	// Gene 0 determines maxspeed and r
 	// The bigger the boop, the slower it is

@@ -44,7 +44,7 @@ NeuronLayer::NeuronLayer(int NumNeurons,
 NeuralNetwork::NeuralNetwork()
 {
 	m_NumInputs = 2;
-	m_NumOutputs = 2;
+	m_NumOutputs = 3;
 	m_NumHiddenLayers = 1;
 	m_NeuronsPerHiddenLayer = 4;
 

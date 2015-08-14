@@ -8,7 +8,7 @@ double duration;
 World::World(int num) :
 	m_sizeOfGen(num) {
 	// Start with initial food and creatures
-	food = new Food(num);
+	food = new Food(num * 3);
 	for (int i = 0; i < num; i++) {
 		Point *l = new Point(rand() % WIDTH, rand() % HEIGHT);
 		std::cout << "New Boop at: " << l->x << " " << l->y << std::endl;
@@ -19,7 +19,7 @@ World::World(int num) :
 }
 
 // Make a new creature
-void World::born(float x= rand() % WIDTH, float y=rand() % HEIGHT) {
+void World::born(float x = rand() % WIDTH, float y = rand() % HEIGHT) {
 	Point *l = new Point(x, y);
 	DNA *dna = new DNA();
 	boops.push_back(new Boop(l, dna));
@@ -53,15 +53,22 @@ void World::run() {
 			i++;
 		}
 	}
-	if (boops.size() < m_sizeOfGen/4)
+	if (boops.size() < m_sizeOfGen / 4)
 	{
 		static int generation = 0;
 		generation++;
 		duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-		ofstream myfile;
-		myfile.open("example.csv",std::fstream::app);
-		myfile << generation <<","<< duration << "\n";
-		myfile.close();
+		static std::ofstream myfile;
+		if (!myfile.is_open())
+		{
+			time_t t = time(0);   // get time now
+			struct tm now;
+			localtime_s(&now, &t);
+			char buffer[80];
+			strftime(buffer, 80, "%m-%d %I.%M.csv", &now);
+			myfile.open(buffer, std::fstream::app);
+		}
+		myfile << generation << "," << duration << "\n";
 		std::cout << "Epoch time: " << duration << '\n';
 		vector<Boop*> newboops;
 		for (auto i = boops.begin(); i != boops.end(); i++) {
@@ -80,7 +87,7 @@ void World::run() {
 			born();
 		}
 		delete food;
-		food = new Food(m_sizeOfGen*2);
+		food = new Food(m_sizeOfGen * 3);
 		start = std::clock();
 		duration = 0;
 	}
