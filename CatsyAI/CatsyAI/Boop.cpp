@@ -51,12 +51,7 @@ Boop *Boop::reproduce() {
 	Point *location = new Point(rand() % WIDTH, rand() % HEIGHT);
 	Boop *newBoop = new Boop(location, childDNA);
 	newBoop->nn.PutWeights(nn.GetWeights());
-	//cout << "Strongest weights:" << endl;
-	//for each (float weight in nn.GetWeights())
-	//{
-	//	cout << weight << " ";
-	//}
-	//cout << endl;
+	newBoop->nn.mutateWeights();
 	return newBoop;
 }
 

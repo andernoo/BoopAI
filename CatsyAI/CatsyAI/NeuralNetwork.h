@@ -81,7 +81,7 @@ public:
 
 	//sigmoid response curve
 	inline double Sigmoid(double activation, double response);
-
+	void mutateWeights();
 };
 
 

@@ -53,7 +53,7 @@ void World::run() {
 			i++;
 		}
 	}
-	if (boops.size() < 4)
+	if (boops.size() < m_sizeOfGen/4)
 	{
 		static int generation = 0;
 		generation++;
@@ -66,11 +66,12 @@ void World::run() {
 		vector<Boop*> newboops;
 		for (auto i = boops.begin(); i != boops.end(); i++) {
 			Boop *b = *i;
-			Boop *child = b->reproduce();
 			b->health = 200;
 			b->location->x = rand() % WIDTH;
 			b->location->y = rand() % HEIGHT;
-			newboops.push_back(child);
+			newboops.push_back(b->reproduce());
+			newboops.push_back(b->reproduce());
+			newboops.push_back(b->reproduce());
 			newboops.push_back(b);
 		}
 		boops = newboops;
