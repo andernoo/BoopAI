@@ -1,4 +1,4 @@
-# CatsyAI
+# BoopAI
 ##A neural network with genetic algorithms experiment
 
 ###Getting smarter!
