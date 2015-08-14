@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Perceptron.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Basic Text Evolution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -27,18 +24,36 @@
     <ClCompile Include="Boop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BVector.cpp">
+    <ClCompile Include="DNA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Food.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Perceptron.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Boop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BVector.h">
+    <ClInclude Include="DNA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Food.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,6 +22,7 @@
     <ProjectGuid>{B13C4861-785A-4A5F-830E-69D2E6DF66A0}</ProjectGuid>
     <RootNamespace>CatsyAI</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>BoopAI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -68,7 +69,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>D:\freeglut\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>D:\freeglut\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -78,6 +82,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -120,15 +125,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boop.cpp" />
-    <ClCompile Include="BVector.cpp" />
-    <ClCompile Include="Perceptron.cpp" />
     <ClCompile Include="Basic Text Evolution.cpp" />
+    <ClCompile Include="DNA.cpp" />
+    <ClCompile Include="Food.cpp" />
+    <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boop.h" />
-    <ClInclude Include="BVector.h" />
-    <ClInclude Include="Perceptron.h" />
+    <ClInclude Include="DNA.h" />
+    <ClInclude Include="Food.h" />
+    <ClInclude Include="NeuralNetwork.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
