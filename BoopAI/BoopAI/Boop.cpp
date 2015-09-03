@@ -76,6 +76,7 @@ void Boop::update(Food *f) {
 
 	//this will store all the inputs for the NN
 	std::vector<double> inputs;
+	r = map(health, 0, 1000, 5, 15);
 
 	//add in vector to closest food
 	target = f->getClosest(location);
@@ -85,6 +86,7 @@ void Boop::update(Food *f) {
 	}
 	inputs.push_back(target->x - location->x);
 	inputs.push_back(target->y - location->y);
+	inputs.push_back(map(health,0,1000,-10,10));
 
 	//update the brain and get feedback
 	std::vector<double> output = nn.update(inputs);

@@ -30,6 +30,8 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutCreateWindow("AnooGame");
 
+	glEnable(GL_POINT_SMOOTH);
+
 	glOrtho(0, (WIDTH), 0, (HEIGHT), 1, -1);
 	//glOrtho(-40, 40, -30, 30, 1, -1);
 

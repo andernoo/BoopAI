@@ -27,7 +27,7 @@ void Food::run() {
 	}
 
 	// There's a small chance food will appear randomly
-	if ((rand() / (double) (RAND_MAX + 1)) < 0.05) {
+	if ((rand() / (double) (RAND_MAX + 1)) < 0.1) {
 		food.push_back(new Point(rand() % WIDTH, rand() % HEIGHT));
 	}
 }
