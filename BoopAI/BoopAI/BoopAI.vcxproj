@@ -70,8 +70,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\freeglut\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\BoopAI\BoopAI;D:\freeglut\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\freeglut\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\BoopAI\BoopAI;D:\freeglut\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,7 +85,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Users\Andrew\Source\Repos\Box2D\Box2D\Build\vs2013\bin\x32\Debug\Box2D.lib;D:\freeglut\lib\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -107,6 +110,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>D:\Users\Andrew\Source\Repos\Box2D\Box2D\Build\vs2013\bin\x32\Debug\Box2D.lib;D:\freeglut\lib\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,6 +132,7 @@
     <ClCompile Include="Basic Text Evolution.cpp" />
     <ClCompile Include="DNA.cpp" />
     <ClCompile Include="Food.cpp" />
+    <ClCompile Include="math_3d.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="World.cpp" />
@@ -136,8 +141,8 @@
     <ClInclude Include="Boop.h" />
     <ClInclude Include="DNA.h" />
     <ClInclude Include="Food.h" />
+    <ClInclude Include="math_3d.h" />
     <ClInclude Include="NeuralNetwork.h" />
-    <ClInclude Include="Point.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

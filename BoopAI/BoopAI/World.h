@@ -5,17 +5,18 @@
 
 class World {
 private:
-	int m_sizeOfGen;
+	GLuint boopBuffer;
 public:
 	std::vector<Boop*> boops;    // An arraylist for all the creatures
 	std::vector<Boop*> deadBoops;    // An arraylist for all the creatures
 	Food *food;
+	b2World *physWorld;
 
 	// Constructor
-	World(int num);
+	World(b2World *physWorld);
 
 	// Make a new creature
-	void born(float x, float y);
+	void newBoop(float x = rand() % WIDTH, float y = rand() % HEIGHT);
 
 	// Run the world
 	void run();

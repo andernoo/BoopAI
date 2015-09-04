@@ -6,29 +6,28 @@
 std::clock_t start;
 double duration;
 
-World::World(int num) :
-	m_sizeOfGen(num) {
+World::World(b2World *physWorld) :
+physWorld(physWorld)
+{
+	int num = 20;
 	// Start with initial food and creatures
 	food = new Food(num);
 	for (int i = 0; i < num; i++) {
-		Point *l = new Point(rand() % WIDTH, rand() % HEIGHT);
-		//std::cout << "New Boop at: " << l->x << " " << l->y << std::endl;
-		DNA *dna = new DNA();
-		boops.push_back(new Boop(l, dna));
+		newBoop();
 	}
 	start = std::clock();
+	glGenBuffers(1,&boopBuffer);
 }
 
 // Make a new creature
-void World::born(float x = rand() % WIDTH, float y = rand() % HEIGHT) {
+void World::newBoop(float x, float y) {
 	Point *l = new Point(x, y);
 	DNA *dna = new DNA();
-	boops.push_back(new Boop(l, dna));
+	boops.push_back(new Boop(physWorld, l, dna));
 }
 
 bool sortBoops(Boop *lhs, Boop *rhs)
 {
-	//return (lhs->survived + 5 * lhs->foodEaten) > (rhs->survived + 5 * rhs->foodEaten);
 	return lhs->foodEaten > rhs->foodEaten;
 }
 
@@ -41,14 +40,14 @@ void World::run() {
 	for (auto i = boops.begin(); i != boops.end();) {
 		// All boops run and eat
 		Boop *b = *i;
-		b->run(food);
+		b->run(food, boopBuffer);
 		b->eat(food);
 
 		// If it's dead, kill it and make food
 		if (b->dead()) {
 			static double winning = 0;
 			static int foods = 0;
-			b->survived = (std::clock() - b->spawned) / (double) CLOCKS_PER_SEC;
+			b->survived = (std::clock() - b->spawned) / (float) CLOCKS_PER_SEC;
 
 			static std::ofstream myfile;
 			if (!myfile.is_open())
@@ -76,7 +75,8 @@ void World::run() {
 			}
 			cout << endl;
 			i = boops.erase(i);
-			food->add(b->location);
+			//food->add(b->body->GetPosition());
+			physWorld->DestroyBody(b->body);
 			delete b;
 		}
 		else {
@@ -85,9 +85,14 @@ void World::run() {
 	}
 	if (boops.size() < 20)
 	{
-		std::sort(boops.begin(), boops.end(), sortBoops);
-		Boop *newBoop = boops.at(0)->reproduce(boops.at(1));
-		newBoop->r++;
-		boops.push_back(newBoop);
+		if (boops.size() > 3)
+		{
+			std::sort(boops.begin(), boops.end(), sortBoops);
+			boops.push_back(boops.at(0)->reproduce(boops.at(1)));
+			boops.push_back(boops.at(1)->reproduce(boops.at(2)));
+		}
+		else {
+			newBoop();
+		}
 	}
 }

@@ -4,14 +4,18 @@
 #include "Food.h"
 #include "NeuralNetwork.h"
 #include <ctime>
+#include <Box2D\Box2D.h>
+#include "math_3d.h"
 
 class Boop {
-	const double DegToRad = 3.14159265 / 180;
 public:
+	b2World *physWorld;
+	// Define the dynamic body. We set its position and call the body factory.
+	b2Body* body;
 	int foodEaten;
 	NeuralNetwork nn;
 	Point *location; // Location
-	Point *target;
+	b2Vec2 target;
 	DNA *dna;          // DNA
 	float health;     // Life timer
 	// DNA will determine size and maxspeed
@@ -21,9 +25,9 @@ public:
 	std::clock_t spawned;
 
 	// Create a "boop" creature
-	Boop(Point *l, DNA *dna_);
+	Boop(b2World *physWorld, Point *l, DNA *dna_);
 
-	void run(Food *f);
+	void run(Food *f, GLuint boopBuffer);
 
 	// A boop can find food and eat it
 	void eat(Food *f);
@@ -38,7 +42,7 @@ public:
 	void borders();
 
 	// Method to display
-	void display();
+	void display(GLuint boopBuffer);
 
 	// Death
 	bool dead();

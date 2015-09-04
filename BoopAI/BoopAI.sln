@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoopAI", "BoopAI\BoopAI.vcxproj", "{B13C4861-785A-4A5F-830E-69D2E6DF66A0}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AnooAI", "Installer\Installer.vdproj", "{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,12 +21,6 @@ Global
 		{B13C4861-785A-4A5F-830E-69D2E6DF66A0}.Release|x64.Build.0 = Release|x64
 		{B13C4861-785A-4A5F-830E-69D2E6DF66A0}.Release|x86.ActiveCfg = Debug|Win32
 		{B13C4861-785A-4A5F-830E-69D2E6DF66A0}.Release|x86.Build.0 = Debug|Win32
-		{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}.Debug|x64.ActiveCfg = Debug
-		{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}.Debug|x86.ActiveCfg = Debug
-		{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}.Debug|x86.Build.0 = Debug
-		{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}.Release|x64.ActiveCfg = Release
-		{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}.Release|x86.ActiveCfg = Debug
-		{B1798B78-5FAC-4234-B26B-A8E456F5B1DB}.Release|x86.Build.0 = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
