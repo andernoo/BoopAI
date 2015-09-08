@@ -129,7 +129,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boop.cpp" />
-    <ClCompile Include="Basic Text Evolution.cpp" />
     <ClCompile Include="DNA.cpp" />
     <ClCompile Include="Food.cpp" />
     <ClCompile Include="math_3d.cpp" />
