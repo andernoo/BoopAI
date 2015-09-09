@@ -29,8 +29,8 @@ physWorld(physWorld)
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
 	myBodyDef.position.Set(l->x, l->y);
-	myBodyDef.linearDamping = 2;
-	myBodyDef.angularDamping = 2;
+	myBodyDef.linearDamping = 3;
+	myBodyDef.angularDamping = 3;
 	body = physWorld->CreateBody(&myBodyDef);
 
 	//add circle fixture
@@ -120,7 +120,7 @@ void Boop::update(Food *f) {
 	body->ApplyTorque(20000 * -output[2], true);
 
 	// Death always looming
-	health -= 0.8f;
+	health -= 0.2f;
 }
 
 // Method to display
@@ -155,41 +155,9 @@ void Boop::display(GLuint boopBuffer) {
 	glDrawArrays(GL_TRIANGLES, 0, 6*3);
 	glDisableVertexAttribArray(0);
 	glPopMatrix();
-
-	//int triangleAmount = 10; //# of triangles used to draw circle
-
-	//GLfloat twicePi = 2.0f * 3.14159265;
-
-	//glPushMatrix();
-	//	glRotatef(angle * 3.141592653589793 / 180.0, 0, 0, 1);
-	//	glBegin(GL_TRIANGLE_FAN);
-	//	glVertex2f(pos.x, pos.y); // center of circle
-	//	for (int i = 0; i <= triangleAmount;i++) {
-	//		glVertex2f(
-	//			pos.x + (r * cos(i *  twicePi / triangleAmount)),
-	//			pos.y + (r * sin(i * twicePi / triangleAmount))
-	//			);
-	//	}
-	//	glEnd();
-
-	//	glBegin(GL_LINES);
-	//		glVertex2f(pos.x, pos.y);
-	//		glVertex2f(target.x, target.y);
-	//	glEnd();
-
-	//	glBegin(GL_LINES);
-	//		glVertex2f(pos.x, pos.y);
-	//		glVertex2f(pos.x + 20, pos.y);
-	//	glEnd();
-	//glPopMatrix();
 }
 
 // Death
 bool Boop::dead() {
-	if (health < 0.0) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	return health < 0.0;
 }

@@ -13,10 +13,11 @@ public:
 	b2World *physWorld;
 
 	// Constructor
-	World(b2World *physWorld);
+	World(b2World *physWorld, bool persist);
 
 	// Make a new creature
-	void newBoop(float x = rand() % WIDTH, float y = rand() % HEIGHT);
+	void newBoop(std::vector<double> weights);
+	void newBoop();
 
 	// Run the world
 	void run();

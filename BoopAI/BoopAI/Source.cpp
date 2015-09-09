@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	}
 
 	physWorld = new b2World(b2Vec2(0, 0));
-	world = new World(physWorld);
+	world = new World(physWorld, false);
 
 	glEnable(GL_POINT_SMOOTH);
 	//glEnable(GL_PROGRAM_POINT_SIZE);
