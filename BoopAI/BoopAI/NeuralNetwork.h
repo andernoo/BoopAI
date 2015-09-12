@@ -1,13 +1,4 @@
-#ifndef CNEURALNET_H
-#define CNEURALNET_H
-//------------------------------------------------------------------------
-//
-//	Name: NeuralNetwork.h
-//
-//  Author: Mat Buckland 2002
-//
-//  Desc: Class for creating a feedforward neural net.
-//-------------------------------------------------------------------------
+#pragma once
 #include <vector>
 #include <fstream>
 #include <math.h>
@@ -83,8 +74,3 @@ public:
 	inline double Sigmoid(double activation, double response);
 	void mutateWeights();
 };
-
-
-
-
-#endif

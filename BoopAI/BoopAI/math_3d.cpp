@@ -1,4 +1,15 @@
 #include "math_3d.h"
+#include "Box2D\Box2D.h"
+
+float mathRandom(float min, float max)
+{
+	return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
+}
+
+double pointDistance(b2Vec2 one, b2Vec2 two)
+{
+	return sqrt((two.x - one.x)*(two.x - one.x) + (two.y - one.y)*(two.y - one.y));
+}
 
 Vector3f Vector3f::Cross(const Vector3f& v) const
 {

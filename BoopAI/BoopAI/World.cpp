@@ -7,8 +7,8 @@
 World::World(b2World *physWorld, bool persist=false) :
 physWorld(physWorld)
 {
-	// Start with initial food and creatures
-	food = new Food(10);
+	//in FooTest constructor
+	physWorld->SetContactListener(&contactListener);
 	if (persist)
 	{
 		cout << "Using weights from persist.csv" << endl;
@@ -31,7 +31,11 @@ physWorld(physWorld)
 			newBoop();
 		}
 	}
-	glGenBuffers(1,&boopBuffer);
+	for (int i = 0; i < 30; i++) {
+		newFood();
+	}
+	glGenBuffers(1, &boopBuffer);
+	glGenBuffers(1, &foodBuffer);
 }
 
 bool sortBoops(Boop *lhs, Boop *rhs)
@@ -41,35 +45,46 @@ bool sortBoops(Boop *lhs, Boop *rhs)
 
 // Make a new creature
 void World::newBoop(std::vector<double> weights) {
-	Point *l = new Point((float) (rand() % WIDTH), (float) (rand() % HEIGHT));
-	DNA *dna = new DNA();
-	Boop *boop = new Boop(physWorld, l, dna);
+	Boop *boop = new Boop(physWorld, b2Vec2((float)(rand() % WIDTH), (float) (rand() % HEIGHT)));
 	boop->nn.PutWeights(weights);
 	boops.push_back(boop);
 }
 
 void World::newBoop() {
-	Point *l = new Point((float)(rand() % WIDTH), (float)(rand() % HEIGHT));
-	DNA *dna = new DNA();
-	boops.push_back(new Boop(physWorld, l, dna));
+	boops.push_back(new Boop(physWorld, b2Vec2((float) (rand() % WIDTH), (float) (rand() % HEIGHT))));
+}
+
+void World::newFood() {
+	foods.push_back(new Food(physWorld, &foods));
+}
+
+void World::render()
+{
+	for (auto i = foods.begin(); i != foods.end(); i++) {
+		Food *f = *i;
+		f->render(foodBuffer);
+	}
+	for (auto i = boops.begin(); i != boops.end(); i++) {
+		Boop *b = *i;
+		b->render(boopBuffer);
+	}
 }
 
 // Run the world
 void World::run() {
-	// Deal with food
-	food->run();
-
+	//cout << "BODIES: " << physWorld->GetBodyCount() << " FOODS: " << foods.size() << " BOOPS: " << boops.size() << endl;
 	// Cycle through the ArrayList backwards b/c we are deleting
+	if (mathRandom(0, 1) < 0.01)
+		newFood();
 	for (auto i = boops.begin(); i != boops.end();) {
 		// All boops run and eat
 		Boop *b = *i;
-		b->run(food, boopBuffer);
-		b->eat(food);
+		b->update(foods);
 
 		// If it's dead, kill it and make food
 		if (b->dead()) {
 			static double winning = 0;
-			static int foods = 0;
+			static unsigned int foods = 0;
 			b->survived = (std::clock() - b->spawned) / (float) CLOCKS_PER_SEC;
 
 			static std::ofstream myfile;
@@ -92,19 +107,17 @@ void World::run() {
 				myfile << '\n';
 			}
 
-			if (b->survived > winning)
+			if (b->survived > winning && b->survived >= 20)
 			{
 				winning = b->survived;
 				cout << "Life record!: " << b->survived << endl;;
 			}
-			if (b->foodEaten > foods)
+			if (b->foodEaten > foods && b->foodEaten >= 5)
 			{
 				foods = b->foodEaten;
 				cout << " Food record!: " << b->foodEaten << endl;;
 			}
 			i = boops.erase(i);
-			//food->add(b->body->GetPosition());
-			physWorld->DestroyBody(b->body);
 			delete b;
 		}
 		else {
@@ -112,17 +125,19 @@ void World::run() {
 		}
 	}
 
-	if (boops.size() < 20)
+	if (boops.size() < 30)
 	{
-		int count=boops.size();
-		if (count < 3) {
+		int count = boops.size();
+		std::sort(boops.begin(), boops.end(), sortBoops);
+		if (boops.size() <	2) {
 			newBoop();
 		}
 		else {
-			std::sort(boops.begin(), boops.end(), sortBoops);
-			for (int i = 1; i < count; i++)
+			for (int i = 1; i != count; i++)
 			{
-				boops.push_back(boops.at(i)->reproduce(boops.at(i - 1)));
+				Boop *mother = boops.at(i);
+				Boop *father = boops.at(i-1);
+				boops.push_back(mother->reproduce(father));
 			}
 		}
 	}

@@ -2,14 +2,16 @@
 #include "Boop.h"
 #include "Food.h"
 #include <vector>
+#include "ContactListener.h"
 
 class World {
 private:
 	GLuint boopBuffer;
+	GLuint foodBuffer;
+	ContactListener contactListener;
 public:
 	std::vector<Boop*> boops;    // An arraylist for all the creatures
-	std::vector<Boop*> deadBoops;    // An arraylist for all the creatures
-	Food *food;
+	std::vector<Food*> foods;
 	b2World *physWorld;
 
 	// Constructor
@@ -19,6 +21,9 @@ public:
 	void newBoop(std::vector<double> weights);
 	void newBoop();
 
+	void newFood();
+
 	// Run the world
 	void run();
+	void render();
 };

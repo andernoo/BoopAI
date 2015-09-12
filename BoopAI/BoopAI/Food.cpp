@@ -2,58 +2,45 @@
 #include <Box2D\Box2D.h>
 #include "math_3d.h"
 
-Food::Food(int num) {
-	// Start with some food
-	for (int i = 0; i < num; i++) {
-		food.push_back(b2Vec2(rand() % WIDTH, rand() % HEIGHT));
-	}
-	glGenBuffers(1, &foodBuffer);
-}
-
-// Add some food at a location
-void Food::add(b2Vec2 l) {
-	food.push_back(l);
-}
-
-// Display the food
-void Food::run() {
-	for (auto i = food.begin(); i != food.end(); i++) {
-		b2Vec2 location = (*i);
-		glColor3f(0.831, 0.749, 0);
-		Vector3f Vertices[1];
-		Vertices[0] = Vector3f(location.x, location.y, 0.0f);
-		glPointSize(1);
-		glBindBuffer(GL_ARRAY_BUFFER, foodBuffer);
-
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, foodBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glDrawArrays(GL_POINTS, 0, 1);
-		glDisableVertexAttribArray(0);
-	}
-
-	// There's a small chance food will appear randomly
-	if ((rand() / (double) (RAND_MAX + 1)) < 0.05) {
-		food.push_back(b2Vec2(rand() % WIDTH, rand() % HEIGHT));
-	}
-}
-
-b2Vec2 Food::getClosest(b2Vec2 l)
+Food::Food(b2World *physWorld, std::vector<Food*> *food) :
+	physWorld(physWorld), foods(food)
 {
-	double closest_so_far = 99999;
+	//set up dynamic body, store in class variable
+	b2BodyDef myBodyDef;
+	myBodyDef.type = b2_dynamicBody;
+	myBodyDef.position.Set(mathRandom(0, WIDTH), mathRandom(0, HEIGHT));
+	body = physWorld->CreateBody(&myBodyDef);
+	body->SetUserData(this);
 
-	b2Vec2 vClosestObject;
+	b2CircleShape circleShape;
 
-	//cycle through mines to find closest
-	for (int i = 0; i<food.size(); i++)
-	{
-		double distance = pow(food.at(i).x - l.x, 2) + pow(food.at(i).y - l.y, 2);
-		if (distance < closest_so_far)
-		{
-			closest_so_far = distance;
-			vClosestObject = food.at(i);
-		}
-	}
-	return vClosestObject;
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &circleShape;
+	fixtureDef.isSensor = true;
+	body->CreateFixture(&fixtureDef);
+}
+
+Food::~Food()
+{
+	// FIND A WAY TO REMOVE IT FROM THE FOODS LIST
+	physWorld->DestroyBody(body);
+}
+
+void Food::render(GLuint foodBuffer)
+{
+	glColor3f(0.831f, 0.749f, 0);
+	Vector2f Vertices[1];
+	Vertices[0] = Vector2f(body->GetPosition().x, body->GetPosition().y);
+	glPointSize(2);
+	glBindBuffer(GL_ARRAY_BUFFER, foodBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_POINTS, 0, 1);
+	glDisableVertexAttribArray(0);
+}
+
+int Food::getEntityType()
+{
+	return ET_FOOD;
 }

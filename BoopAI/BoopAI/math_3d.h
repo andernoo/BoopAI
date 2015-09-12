@@ -1,17 +1,18 @@
 #pragma once
 
 #include <stdio.h>
-#ifdef WIN32
 #define _USE_MATH_DEFINES 
 #include <cmath>
-#else
-#include <math.h>
-#endif
+#include "Box2D\Box2D.h"
+
+float mathRandom(float min, float max);
+double pointDistance(b2Vec2 one, b2Vec2 two);
+
+#define WIDTH 1280
+#define HEIGHT 720
 
 #define ToRadian(x) (float)(((x) * 3.1415 / 180.0f))
 #define ToDegree(x) (float)(((x) * 180.0f / 3.1415))
-
-float RandomFloat();
 
 struct Vector2i
 {

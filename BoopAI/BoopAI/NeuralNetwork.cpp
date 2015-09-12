@@ -1,4 +1,5 @@
 #include "NeuralNetwork.h"
+#include "math_3d.h"
 #include <iostream>
 
 Neuron::Neuron(int NumInputs) : m_NumInputs(NumInputs + 1)
@@ -22,10 +23,10 @@ NeuronLayer::NeuronLayer(int NumNeurons,
 
 NeuralNetwork::NeuralNetwork()
 {
-	m_NumInputs = 4;
-	m_NumOutputs = 3;
+	m_NumInputs = 2;
+	m_NumOutputs = 6;
 	m_NumHiddenLayers = 0;
-	m_NeuronsPerHiddenLayer = 5;
+	m_NeuronsPerHiddenLayer = 3;
 
 	CreateNet();
 
@@ -209,10 +210,10 @@ void NeuralNetwork::mutateWeights()
 			//for each weight
 			for (int k = 0; k < m_vecLayers[i].m_vecNeurons[j].m_NumInputs; ++k)
 			{
-				if (rand() % 1000 <= 2)
+				if (rand() % 100 == 1)
 				{
 					//std::cout << "Mutating weight" << std::endl;
-					m_vecLayers[i].m_vecNeurons[j].m_vecWeight[k] = (-1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - -1))));
+					m_vecLayers[i].m_vecNeurons[j].m_vecWeight[k] += mathRandom(-0.1, 0.1);
 				}
 			}
 		}
