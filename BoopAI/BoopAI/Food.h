@@ -4,16 +4,11 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include "Entity.h"
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
-
-// Evolution EcoSystem
-
-// A collection of food in the world
+#include <iostream>
 
 class Food : public Entity {
 public:
+	bool eaten = false;
 	b2Body *body;
 	b2World *physWorld;
 	std::vector<Food*> *foods;

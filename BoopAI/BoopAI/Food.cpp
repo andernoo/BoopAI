@@ -9,20 +9,19 @@ Food::Food(b2World *physWorld, std::vector<Food*> *food) :
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
 	myBodyDef.position.Set(mathRandom(0, WIDTH), mathRandom(0, HEIGHT));
+	myBodyDef.bullet = true;
 	body = physWorld->CreateBody(&myBodyDef);
 	body->SetUserData(this);
-
 	b2CircleShape circleShape;
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &circleShape;
-	fixtureDef.isSensor = true;
+	fixtureDef.density = 0;
 	body->CreateFixture(&fixtureDef);
 }
 
 Food::~Food()
 {
-	// FIND A WAY TO REMOVE IT FROM THE FOODS LIST
 	physWorld->DestroyBody(body);
 }
 
@@ -31,7 +30,7 @@ void Food::render(GLuint foodBuffer)
 	glColor3f(0.831f, 0.749f, 0);
 	Vector2f Vertices[1];
 	Vertices[0] = Vector2f(body->GetPosition().x, body->GetPosition().y);
-	glPointSize(2);
+	glPointSize(4);
 	glBindBuffer(GL_ARRAY_BUFFER, foodBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
