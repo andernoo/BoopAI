@@ -206,8 +206,12 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 
+# Something stupid
+.opendb
+
 # LightSwitch generated files
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 *.csv
+/BoopAI/Box2D/

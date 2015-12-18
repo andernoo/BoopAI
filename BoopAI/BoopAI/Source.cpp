@@ -26,22 +26,23 @@ void drawText(float x, float y, void *font, char *string) {
 	for (c = string; *c != NULL; c++) {
 		glutBitmapCharacter(font, *c);
 	}
-}
+} 
 
 void render()
-{
+{ 
 	// Clear the screen to black
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	fpsTimer->timeFrame();
+	fpsTimer->timeFrame(); 
 
 	float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
+	int32 positionIterations = 2; 
 	physWorld->Step(timeStep, velocityIterations, positionIterations);
 	glColor3f(1.f, 1.f, 1.f);
-	drawText(18, 18, GLUT_BITMAP_HELVETICA_18, fpsTimer->getFps());
+	string fps = "FPS: " + (string)fpsTimer->getFps();
+	drawText(18, 18, GLUT_BITMAP_HELVETICA_18, (char*)fps.c_str());
 
 	string tournament = to_string(world->currentTournament+1);
 	tournament = "Tournament: " + tournament;

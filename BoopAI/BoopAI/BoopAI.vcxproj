@@ -76,7 +76,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\BoopAI\BoopAI;D:\freeglut\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\BoopAI\Box2D\Box2D;D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\BoopAI\BoopAI;D:\freeglut\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\freeglut\lib;$(LibraryPath)$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <CodeAnalysisRuleSet>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
@@ -96,7 +96,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>D:\Users\Andrew\Source\Repos\Box2D\Box2D\Build\vs2013\bin\x32\Debug\Box2D.lib;D:\freeglut\lib\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\freeglut\lib\glew32.lib;D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\BoopAI\Box2D\Box2D\Build\vs2013\bin\x32\Debug\Box2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,7 +126,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>D:\Users\Andrew\Source\Repos\Box2D\Box2D\Build\vs2013\bin\x32\Release\Box2D.lib;D:\freeglut\lib\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\freeglut\lib\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

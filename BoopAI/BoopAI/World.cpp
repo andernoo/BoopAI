@@ -207,7 +207,6 @@ void World::run() {
 			resetFood();
 			resetTournaments();
 		}
-
 	}
 
 	for (auto i = tournament[currentTournament].begin(); i != tournament[currentTournament].end();)
