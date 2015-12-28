@@ -3,6 +3,7 @@
 #include <algorithm>    // std::sort
 #include <ctime>
 #include <string>
+#include <iomanip>
 
 World::World(b2World *physWorld, bool persist = false) :
 	physWorld(physWorld)
@@ -163,9 +164,18 @@ void World::resetTournaments()
 	currentTournament = 0;
 	tournament.clear();
 	std::sort(deadBoops.begin(), deadBoops.end(), sortBoops);
-	cout << "GENERATION END " << endl;
+	cout << "----- GENERATION ENDS -----" << endl;
 	cout << "Winner ate: " << deadBoops.at(0)->foodEaten << endl;
-	cout << "Winner survived: " << deadBoops.at(0)->survived << endl;
+	cout << "Winner survived: " << deadBoops.at(0)->survived << endl << endl;
+	cout << left << setw(27) <<setfill('-') << "------ Top 5 Boops ------" << endl;
+	cout << setfill(' ') << "    | Ate |   Survived" << endl;
+	for (int i = 0; i < 5; i++)
+	{
+		cout << right << setw(3) << i+1 << " |" << setw(4) << deadBoops.at(i)->foodEaten << " |" << setw(10) << deadBoops.at(i)->survived << "s" << endl;
+	}
+	cout << endl << endl;
+	deadBoops.at(0)->foodEaten = 0;
+	deadBoops.at(0)->survived = 0;
 	for (int t = 0; t < NUM_TOURNAMENTS; t++)
 	{
 		std::vector<Boop*> boops;
@@ -232,24 +242,13 @@ void World::run() {
 				myfile << "Boop Life" << "," << "Boop Food" << "," << "Life Record" << "," << "Food Record\n";
 			}
 			else {
-				myfile << b->survived << "," << b->foodEaten << "," << winning << "," << foods;
+				myfile << b->survived << "," << b->foodEaten;
 				vector<double> weights = tournament[currentTournament].at(0)->nn.GetWeights();
 				for (auto i = weights.begin(); i != weights.end(); i++)
 				{
 					myfile << ',' << (*i);
 				}
 				myfile << '\n';
-			}
-
-			if (b->survived > winning && b->survived >= 20)
-			{
-				winning = b->survived;
-				cout << "Life record!: " << b->survived << endl;;
-			}
-			if (b->foodEaten > foods && b->foodEaten >= 5)
-			{
-				foods = b->foodEaten;
-				cout << " Food record!: " << b->foodEaten << endl;;
 			}
 			b->destroyBody();
 			deadBoops.push_back(b);

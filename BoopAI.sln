@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoopAI", "BoopAI\BoopAI.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "Box2D\Build\vs2013\Box2D.vcxproj", "{98400D17-43A5-1A40-95BE-C53AC78E7694}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{52F942B9-4192-4250-89CD-92C2F084C474}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -44,6 +46,12 @@ Global
 		{98400D17-43A5-1A40-95BE-C53AC78E7694}.Release|x64.Build.0 = Release|x64
 		{98400D17-43A5-1A40-95BE-C53AC78E7694}.Release|x86.ActiveCfg = Release|Win32
 		{98400D17-43A5-1A40-95BE-C53AC78E7694}.Release|x86.Build.0 = Release|Win32
+		{52F942B9-4192-4250-89CD-92C2F084C474}.Debug|Win32.ActiveCfg = Debug
+		{52F942B9-4192-4250-89CD-92C2F084C474}.Debug|x64.ActiveCfg = Debug
+		{52F942B9-4192-4250-89CD-92C2F084C474}.Debug|x86.ActiveCfg = Debug
+		{52F942B9-4192-4250-89CD-92C2F084C474}.Release|Win32.ActiveCfg = Release
+		{52F942B9-4192-4250-89CD-92C2F084C474}.Release|x64.ActiveCfg = Release
+		{52F942B9-4192-4250-89CD-92C2F084C474}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
