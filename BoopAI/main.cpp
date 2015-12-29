@@ -36,7 +36,7 @@ void render()
 
 	fpsTimer->timeFrame();
 
-	float32 timeStep = 1.0f / 60.0f;
+	float32 timeStep = 1.0f / 20.0f;
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;
 	physWorld->Step(timeStep, velocityIterations, positionIterations);
@@ -53,7 +53,7 @@ void render()
 	glutSwapBuffers();
 }
 
-void idleRender()
+void idle()
 {
 	world->run();
 	glutPostRedisplay();
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 
 	glOrtho(0, (WIDTH), 0, (HEIGHT), 1, -1);
 	glutDisplayFunc(render);
-	glutIdleFunc(idleRender);
+	glutIdleFunc(idle);
 
 	//GLuint program=LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 	//glUseProgram(program);

@@ -4,6 +4,7 @@
 #include <ctime>
 #include <string>
 #include <iomanip>
+#include <future>
 
 World::World(bool persist = false)
 {
@@ -113,9 +114,14 @@ void World::resetTournaments()
 // Run the world
 void World::run()
 {
-	for (auto i = tournaments.begin(); i != tournaments.end();)
+	std::vector<std::future<int>> futures;
+	for (auto i = tournaments.begin(); i != tournaments.end(); i++)
 	{
-
+		futures.push_back(std::async([](){ return 2 * 2; })); //make this the tournament->run call
+	}
+	for (auto &f : futures)
+	{
+		std::cout << f.get() << std::endl;
 	}
 }
 

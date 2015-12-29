@@ -16,5 +16,5 @@ public:
 	Tournament();
 	void setBoops(std::vector<Boop*> newBoops);
 	void manageFood();
-	void run();
+	int run();
 };

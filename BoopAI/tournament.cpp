@@ -66,7 +66,7 @@ void Tournament::manageFood()
 	}
 }
 
-void Tournament::run()
+int Tournament::run()
 {
 	manageFood();
 
@@ -83,4 +83,5 @@ void Tournament::run()
 			i++;
 		}
 	}
+	return 1;
 }
