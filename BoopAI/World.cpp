@@ -129,22 +129,6 @@ void World::render()
 		glVertex2f(body->GetPosition().x, body->GetPosition().y);
 	}
 	glEnd();
-
-	if(tournament.at(currentTournament).size()>0)
-	{
-		Boop *boop = tournament.at(currentTournament).at(0);
-		std::vector<double> weights = boop->nn.GetWeights();
-		int numWeights = boop->nn.GetNumberOfWeights();
-		glColor4f(1, 1, 1, 0.4);
-		glBegin(GL_POINTS);
-		glPointSize(10);
-		for (int i = 0; i < numWeights; i++)
-		{
-			//cout << weights.at(i) << ", ";
-			glVertex2f(10, i);
-		}
-		glEnd();
-	}
 }
 
 void World::resetFood()

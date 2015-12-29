@@ -145,12 +145,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boop.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Food.cpp" />
     <ClCompile Include="FPSTimer.cpp" />
     <ClCompile Include="math_3d.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="shader.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="persist.csv" />
     <None Include="SimpleFragmentShader.fragmentshader" />
     <None Include="SimpleVertexShader.vertexshader" />
   </ItemGroup>
