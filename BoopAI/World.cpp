@@ -5,10 +5,8 @@
 #include <string>
 #include <iomanip>
 
-World::World(b2World *physWorld, bool persist = false) :
-	physWorld(physWorld)
+World::World(bool persist = false)
 {
-	physWorld->SetContactListener(&contactListener);
 	//if (persist)
 	//{
 	//	cout << "Using weights from persist.csv" << endl;
@@ -30,59 +28,13 @@ World::World(b2World *physWorld, bool persist = false) :
 
 	for (int t = 0; t < NUM_TOURNAMENTS; t++)
 	{
+		tournaments.push_back(new Tournament());
 		std::vector<Boop*> boops;
 		for (int i = 0; i < NUM_PER_TOURNAMENT; i++) {
-			boops.push_back(new Boop(physWorld));
+			boops.push_back(new Boop());
 		}
-		tournament.push_back(boops);
+		tournaments.at(t)->setBoops(boops);
 	}
-
-	for (int i = 0; i < 30; i++) {
-		newFood();
-	}
-
-	glGenBuffers(1, &foodBuffer);
-
-	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0, 0);
-	groundBodyDef.type = b2_staticBody;
-	groundBody = physWorld->CreateBody(&groundBodyDef);
-
-	b2FixtureDef fixtureDef;
-
-	b2PolygonShape polyShape;
-	fixtureDef.density = 0;
-	fixtureDef.shape = &polyShape;
-
-	b2Vec2 vertex[4] = {
-		b2Vec2(0, 0),
-		b2Vec2(0, HEIGHT),
-		b2Vec2(10, HEIGHT),
-		b2Vec2(10,0)
-	};
-	polyShape.Set(vertex, 4);
-	groundBody->CreateFixture(&fixtureDef);
-
-	vertex[0] = b2Vec2(0, 0);
-	vertex[1] = b2Vec2(0, 10);
-	vertex[2] = b2Vec2(WIDTH, 10);
-	vertex[3] = b2Vec2(WIDTH, 0);
-	polyShape.Set(vertex, 4);
-	groundBody->CreateFixture(&fixtureDef);
-
-	vertex[0] = b2Vec2(0, HEIGHT);
-	vertex[1] = b2Vec2(0, HEIGHT - 10);
-	vertex[2] = b2Vec2(WIDTH, HEIGHT - 10);
-	vertex[3] = b2Vec2(WIDTH, HEIGHT);
-	polyShape.Set(vertex, 4);
-	groundBody->CreateFixture(&fixtureDef);
-
-	vertex[0] = b2Vec2(WIDTH - 10, 0);
-	vertex[1] = b2Vec2(WIDTH, 0);
-	vertex[2] = b2Vec2(WIDTH, HEIGHT);
-	vertex[3] = b2Vec2(WIDTH - 10, HEIGHT);
-	polyShape.Set(vertex, 4);
-	groundBody->CreateFixture(&fixtureDef);
 }
 
 bool sortBoops(Boop *lhs, Boop *rhs)
@@ -90,13 +42,9 @@ bool sortBoops(Boop *lhs, Boop *rhs)
 	return lhs->foodEaten > rhs->foodEaten;
 }
 
-void World::newFood() {
-	foods.push_back(new Food(physWorld, &foods));
-}
-
 void World::render()
 {
-	for (auto i = foods.begin(); i != foods.end(); i++)
+	/*for (auto i = foods.begin(); i != foods.end(); i++)
 	{
 		(*i)->render(foodBuffer);
 	}
@@ -128,118 +76,72 @@ void World::render()
 	{
 		glVertex2f(body->GetPosition().x, body->GetPosition().y);
 	}
-	glEnd();
-}
-
-void World::resetFood()
-{
-	for (auto i = foods.begin(); i != foods.end();) {
-		Food *food = (*i);
-		delete food;
-		i = foods.erase(i);
-	}
-	for (int i = 0; i < 30; i++) {
-		newFood();
-	}
+	glEnd();*/
 }
 
 void World::resetTournaments()
 {
-	currentTournament = 0;
-	tournament.clear();
 	std::sort(deadBoops.begin(), deadBoops.end(), sortBoops);
 	cout << "----- GENERATION ENDS -----" << endl;
 	cout << "Winner ate: " << deadBoops.at(0)->foodEaten << endl;
 	cout << "Winner survived: " << deadBoops.at(0)->survived << endl << endl;
-	cout << left << setw(27) <<setfill('-') << "------ Top 5 Boops ------" << endl;
+	cout << left << setw(27) << setfill('-') << "------ Top 5 Boops ------" << endl;
 	cout << setfill(' ') << "    | Ate |   Survived" << endl;
 	for (int i = 0; i < 5; i++)
 	{
-		cout << right << setw(3) << i+1 << " |" << setw(4) << deadBoops.at(i)->foodEaten << " |" << setw(10) << deadBoops.at(i)->survived << "s" << endl;
+		cout << right << setw(3) << i + 1 << " |" << setw(4) << deadBoops.at(i)->foodEaten << " |" << setw(10) << deadBoops.at(i)->survived << "s" << endl;
 	}
 	cout << endl << endl;
 	deadBoops.at(0)->foodEaten = 0;
 	deadBoops.at(0)->survived = 0;
 	for (int t = 0; t < NUM_TOURNAMENTS; t++)
 	{
+		tournaments.push_back(new Tournament());
 		std::vector<Boop*> boops;
-		for (int i = 0; boops.size() < NUM_PER_TOURNAMENT-2; i++) 
+		for (int i = 0; boops.size() < NUM_PER_TOURNAMENT - 2; i++)
 		{
 			boops.push_back(deadBoops.at(i)->reproduce(deadBoops.at(i + 1)));
 			boops.push_back(deadBoops.at(i)->reproduce(deadBoops.at(i + 1)));
 		}
 		boops.push_back(deadBoops.at(0));
-		boops.push_back(new Boop(physWorld));
-		boops.push_back(new Boop(physWorld));
-		tournament.push_back(boops);
+		boops.push_back(new Boop());
+		boops.push_back(new Boop());
+		tournaments.at(t)->setBoops(boops);
 	}
 }
 
 // Run the world
-void World::run() {
-	for (auto i = foods.begin(); i != foods.end();) {
-		Food *food = (*i);
-		if (food->eaten == true)
+void World::run()
+{
+	for (auto i = tournaments.begin(); i != tournaments.end();)
+	{
+
+	}
+}
+
+void World::writeToFile(std::vector<Boop*> boops)
+{
+	for (auto i = boops.begin(); i != boops.end();)
+	{
+		static std::ofstream myfile;
+		if (!myfile.is_open())
 		{
-			delete food;
-			i = foods.erase(i);
+			time_t t = time(0);   // get time now
+			struct tm now;
+			localtime_s(&now, &t);
+			char buffer[80];
+			strftime(buffer, 80, "%m-%d %I.%M.csv", &now);
+			myfile.open(buffer, std::fstream::app);
+			myfile << "Boop Life" << "," << "Boop Food\n";
 		}
 		else {
-			i++;
-		}
-	}
-	if (mathRandom(0, 1) < 0.01)
-		newFood();
-
-	if (tournament[currentTournament].size() == 0)
-	{
-		currentTournament++;
-		resetFood();
-		if (currentTournament >= NUM_TOURNAMENTS)
-		{
-			currentRound++;
-			resetFood();
-			resetTournaments();
-		}
-	}
-
-	for (auto i = tournament[currentTournament].begin(); i != tournament[currentTournament].end();)
-	{
-		// All boops run and eat
-		Boop *b = *i;
-		b->update();
-
-		// If it's dead, kill it and make food
-		if (b->dead()) {
-			static double winning = 0;
-			static unsigned int foods = 0;
-
-			static std::ofstream myfile;
-			if (!myfile.is_open())
+			myfile << (*i)->survived << "," << (*i)->foodEaten;
+			vector<double> weights = (*i)->nn.GetWeights();
+			for (auto i = weights.begin(); i != weights.end(); i++)
 			{
-				time_t t = time(0);   // get time now
-				struct tm now;
-				localtime_s(&now, &t);
-				char buffer[80];
-				strftime(buffer, 80, "%m-%d %I.%M.csv", &now);
-				myfile.open(buffer, std::fstream::app);
-				myfile << "Boop Life" << "," << "Boop Food" << "," << "Life Record" << "," << "Food Record\n";
+				myfile << ',' << (*i);
 			}
-			else {
-				myfile << b->survived << "," << b->foodEaten;
-				vector<double> weights = tournament[currentTournament].at(0)->nn.GetWeights();
-				for (auto i = weights.begin(); i != weights.end(); i++)
-				{
-					myfile << ',' << (*i);
-				}
-				myfile << '\n';
-			}
-			b->destroyBody();
-			deadBoops.push_back(b);
-			i = tournament[currentTournament].erase(i);
-		}
-		else {
-			i++;
+			myfile << '\n';
 		}
 	}
 }

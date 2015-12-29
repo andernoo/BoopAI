@@ -17,8 +17,7 @@ Boop::~Boop()
 }
 
 // Create a "boop" creature
-Boop::Boop(b2World *physWorld) :
-	physWorld(physWorld)
+Boop::Boop()
 {
 }
 
@@ -91,7 +90,7 @@ void Boop::eat(Food *food)
 
 Boop *Boop::reproduce(Boop *parent) {
 	// Child is exact copy of single parent
-	Boop *newBoop = new Boop(physWorld);
+	Boop *newBoop = new Boop();
 	std::vector<double> mother = nn.GetWeights();
 	std::vector<double> father = parent->nn.GetWeights();
 	std::vector<double> newweights;

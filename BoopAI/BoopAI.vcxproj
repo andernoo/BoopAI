@@ -152,6 +152,7 @@
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="tournament.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="math_3d.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="tournament.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

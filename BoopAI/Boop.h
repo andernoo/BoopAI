@@ -19,7 +19,7 @@ public:
 	b2Vec3 colour = {0,0,0};
 
 	// Create a "boop" creature
-	Boop(b2World *physWorld);
+	Boop();
 
 	~Boop();
 

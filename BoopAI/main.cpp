@@ -44,12 +44,10 @@ void render()
 	string fps = "FPS: " + (string)fpsTimer->getFps();
 	drawText(18, 18, GLUT_BITMAP_HELVETICA_18, (char*)fps.c_str());
 
-	string tournament = to_string(world->currentTournament + 1);
+	/*string tournament = to_string(world->currentTournament + 1);
 	tournament = "Tournament: " + tournament;
-	drawText(18, 40, GLUT_BITMAP_HELVETICA_18, (char*)tournament.c_str());
+	drawText(18, 40, GLUT_BITMAP_HELVETICA_18, (char*)tournament.c_str());*/
 
-	string round = "Generation: " + to_string(world->currentRound + 1);
-	drawText(18, 62, GLUT_BITMAP_HELVETICA_18, (char*)round.c_str());
 	//world->run();
 	world->render();
 	glutSwapBuffers();
@@ -73,11 +71,7 @@ void mouseClick(int button, int state, int x, int y)
 	{
 		if (button == 0)
 		{
-			vector<Boop*> boops = world->tournament.at(world->currentTournament);
-			for (auto i = boops.begin(); i != boops.end(); i++)
-			{
-				(*i)->health = 0;
-			}
+
 		}
 	}
 }
@@ -89,7 +83,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
 	glutInitWindowSize(WIDTH, HEIGHT);
-	glutCreateWindow("AnooGame");
+	glutCreateWindow("BoopAI");
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
@@ -101,8 +95,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	physWorld = new b2World(b2Vec2(0, 0));
-	world = new World(physWorld, false);
+	world = new World(false);
 
 	glutMouseFunc(mouseClick);
 

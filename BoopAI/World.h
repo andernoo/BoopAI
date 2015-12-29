@@ -2,7 +2,7 @@
 #include "Boop.h"
 #include "Food.h"
 #include <vector>
-#include "ContactListener.h"
+#include "Tournament.h"
 #include <Box2D\Box2D.h>
 
 #define NUM_PER_TOURNAMENT 8
@@ -10,25 +10,17 @@
 
 class World {
 private:
-	GLuint foodBuffer;
-	ContactListener contactListener;
-	b2Body *groundBody;
 	void resetTournaments();
 public:
-	unsigned int currentTournament = 0;
-	unsigned int currentRound = 0;
+	unsigned int generations = 0;
 	std::vector<Boop*> deadBoops;
-	std::vector<std::vector<Boop*>> tournament;    // An arraylist for all the creatures
-	std::vector<Food*> foods;
-	b2World *physWorld;
+	std::vector<Tournament*> tournaments;
 
 	// Constructor
-	World(b2World *physWorld, bool persist);
-
-	void newFood();
-	void resetFood();
+	World(bool persist);
 
 	// Run the world
 	void run();
 	void render();
+	void writeToFile(std::vector<Boop*> boops);
 };
