@@ -1,10 +1,4 @@
 #include "World.h"
-#include <iostream>
-#include <algorithm>    // std::sort
-#include <ctime>
-#include <string>
-#include <iomanip>
-#include <future>
 
 World::World(bool persist = false)
 {
@@ -45,23 +39,27 @@ bool sortBoops(Boop *lhs, Boop *rhs)
 
 void World::render()
 {
-	/*for (auto i = foods.begin(); i != foods.end(); i++)
-	{
-		(*i)->render(foodBuffer);
-	}
+	Tournament *mainTournament = tournaments.at(0);
 
-	vector<Boop*> boops = tournament.at(currentTournament);
-	for (auto i = boops.begin(); i != boops.end(); i++)
+	glColor3b(250, 250, 210);
+	glPointSize(2);
+	glBegin(GL_POINTS);
+	for (auto i = mainTournament->foods.begin(); i != mainTournament->foods.end(); i++)
+	{
+		glVertex2f((*i)->body->GetPosition().x, (*i)->body->GetPosition().y);
+	}
+	glEnd();
+
+	for (auto i = mainTournament->boops.begin(); i != mainTournament->boops.end(); i++)
 	{
 		(*i)->render();
 	}
 
 	glColor3f(0.4f, 0.4f, 0.4f);
-
-	for (b2Fixture* fixture = groundBody->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	for (b2Fixture* fixture = mainTournament->groundBody->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		glBegin(GL_QUADS);
-		b2PolygonShape *shape = (b2PolygonShape*) fixture->GetShape();
+		b2PolygonShape *shape = (b2PolygonShape*)fixture->GetShape();
 		for (int i = 0; i < shape->m_count; i++)
 		{
 			glVertex2f(shape->m_vertices[i].x, shape->m_vertices[i].y);
@@ -73,11 +71,11 @@ void World::render()
 	glPointSize(2);
 
 	glBegin(GL_POINTS);
-	for (b2Body *body = physWorld->GetBodyList(); body; body = body->GetNext())
+	for (b2Body *body = mainTournament->physWorld->GetBodyList(); body; body = body->GetNext())
 	{
 		glVertex2f(body->GetPosition().x, body->GetPosition().y);
 	}
-	glEnd();*/
+	glEnd();
 }
 
 void World::resetTournaments()
@@ -114,14 +112,17 @@ void World::resetTournaments()
 // Run the world
 void World::run()
 {
-	std::vector<std::future<int>> futures;
+	std::vector<std::future<std::vector<Boop*>>> futures;
 	for (auto i = tournaments.begin(); i != tournaments.end(); i++)
 	{
-		futures.push_back(std::async([](){ return 2 * 2; })); //make this the tournament->run call
+		Tournament *t = (*i);
+		futures.push_back(std::async(&Tournament::run, t));
 	}
 	for (auto &f : futures)
 	{
-		std::cout << f.get() << std::endl;
+		f.wait();
+		std::vector<Boop*> newDeadBoops = f.get();
+		deadBoops.insert(deadBoops.end(), newDeadBoops.begin(), newDeadBoops.end());
 	}
 }
 

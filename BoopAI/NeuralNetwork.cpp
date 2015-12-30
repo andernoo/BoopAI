@@ -156,7 +156,7 @@ vector<double> NeuralNetwork::update(vector<double> &inputs)
 
 		cWeight = 0;
 
-		//for each neuron sum the (inputs * corresponding weights).Throw 
+		//for each neuron sum the (inputs corresponding weights).Throw 
 		//the total at our sigmoid function to get the output.
 		for (int j = 0; j < m_vecLayers[i].m_NumNeurons; ++j)
 		{

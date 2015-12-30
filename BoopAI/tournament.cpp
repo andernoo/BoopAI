@@ -49,10 +49,18 @@ Tournament::Tournament()
 void Tournament::setBoops(std::vector<Boop*> newBoops)
 {
 	boops = newBoops;
+	for (Boop *boop : boops)
+	{
+		boop->addBody(physWorld);
+	}
 }
 
 void Tournament::manageFood()
 {
+	while (foods.size() < 30)
+	{
+		foods.push_back(new Food(physWorld));
+	}
 	for (auto f = foods.begin(); f != foods.end();) {
 		Food *food = (*f);
 		if (food->eaten == true)
@@ -66,22 +74,29 @@ void Tournament::manageFood()
 	}
 }
 
-int Tournament::run()
+vector<Boop*> Tournament::run()
 {
-	manageFood();
+	float32 timeStep = 1.0f / 20.0f;
+	int32 velocityIterations = 6;
+	int32 positionIterations = 2;
+	physWorld->Step(timeStep, velocityIterations, positionIterations);
 
+	manageFood();
+	vector<Boop*> deadBoops;
 	for (auto i = boops.begin(); i != boops.end();)
 	{
 		Boop *b = (*i);
 		b->update();
 
-		if (b->dead()) {
-			b->destroyBody();
+		if (b->dead()) 
+		{
+			deadBoops.push_back(b);
+			b->destroyBody(physWorld);
 			i = boops.erase(i);
 		}
 		else {
 			i++;
 		}
 	}
-	return 1;
+	return deadBoops;
 }

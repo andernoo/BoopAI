@@ -16,36 +16,36 @@ class ContactListener : public b2ContactListener
 				{
 					if (contact->GetFixtureA()->IsSensor())
 					{
-						contact->GetFixtureA()->SetUserData((void*) 10);
+						contact->GetFixtureA()->SetUserData((void*)10);
 					}
 				}
 				if (static_cast<Entity*>(A)->getEntityType() == ET_FOOD)
 				{
 					if (contact->GetFixtureB()->IsSensor())
 					{
-						contact->GetFixtureB()->SetUserData((void*) 10);
+						contact->GetFixtureB()->SetUserData((void*)10);
 					}
 				}
 				return;
 			}
 			if (static_cast<Entity*>(A)->getEntityType() == ET_FOOD && static_cast<Entity*>(B)->getEntityType() == ET_BOOP)
 			{
-					Boop *boop = static_cast<Boop*>(B);
-					boop->eat(static_cast<Food*>(A));
+				Boop *boop = static_cast<Boop*>(B);
+				boop->eat(static_cast<Food*>(A));
 			}
 			else if (static_cast<Entity*>(B)->getEntityType() == ET_FOOD && static_cast<Entity*>(A)->getEntityType() == ET_BOOP)
 			{
-					Boop *boop = static_cast<Boop*>(A);
-					boop->eat(static_cast<Food*>(B));
+				Boop *boop = static_cast<Boop*>(A);
+				boop->eat(static_cast<Food*>(B));
 			}
 		}
 	}
 
-	void EndContact(b2Contact* contact) 
+	void EndContact(b2Contact* contact)
 	{
 		if (contact->GetFixtureA()->IsSensor())
-			contact->GetFixtureA()->SetUserData((void*) -10);
+			contact->GetFixtureA()->SetUserData((void*)-10);
 		if (contact->GetFixtureB()->IsSensor())
-			contact->GetFixtureB()->SetUserData((void*) -10);
+			contact->GetFixtureB()->SetUserData((void*)-10);
 	}
 };

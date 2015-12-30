@@ -11,15 +11,8 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
 bld/
-[Bb]in/
 [Oo]bj/
 
 # Visual Studio 2015 cache/options directory
@@ -214,4 +207,3 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 *.csv
-/BoopAI/Box2D/

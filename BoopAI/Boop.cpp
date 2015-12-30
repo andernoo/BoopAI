@@ -13,7 +13,6 @@ float map(float x, float in_min, float in_max, float out_min, float out_max)
 
 Boop::~Boop()
 {
-	physWorld->DestroyBody(body);
 }
 
 // Create a "boop" creature
@@ -21,14 +20,14 @@ Boop::Boop()
 {
 }
 
-void Boop::destroyBody()
+void Boop::destroyBody(b2World *physWorld)
 {
 	survived = (std::clock() - spawned) / (float)CLOCKS_PER_SEC;
 	physWorld->DestroyBody(body);
 	body = NULL;
 }
 
-void Boop::addBody()
+void Boop::addBody(b2World *physWorld)
 {
 	spawned = std::clock();
 	//set up dynamic body, store in class variable
@@ -111,8 +110,6 @@ Boop *Boop::reproduce(Boop *parent) {
 
 // Method to update location
 void Boop::update() {
-	if (body == NULL)
-		addBody();
 	inputs.clear();
 
 	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
@@ -147,9 +144,8 @@ void Boop::update() {
 }
 
 // Method to display
-void Boop::render() {
-	if (body == NULL)
-		addBody();
+void Boop::render()
+{
 	float angle = body->GetAngle();
 	b2Vec2 pos = body->GetPosition();
 

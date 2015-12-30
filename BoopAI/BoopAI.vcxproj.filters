@@ -77,6 +77,9 @@
     <ClInclude Include="tournament.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="names.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader" />

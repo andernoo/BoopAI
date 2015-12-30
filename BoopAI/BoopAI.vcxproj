@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\Box2D;C:\Users\Andrew\Source\Repos\BoopAI\glew-1.13.0\include;..\freeglut-3.0.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Andrew\Source\Repos\BoopAI\freeglut-3.0.0\lib;C:\Users\Andrew\Source\Repos\BoopAI\glew-1.13.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Box2D;..\glew-1.13.0\include;..\freeglut-3.0.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\freeglut-3.0.0\lib;..\glew-1.13.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
@@ -162,6 +162,7 @@
     <ClInclude Include="Food.h" />
     <ClInclude Include="FPSTimer.h" />
     <ClInclude Include="math_3d.h" />
+    <ClInclude Include="names.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="tournament.h" />

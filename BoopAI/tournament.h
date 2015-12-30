@@ -1,20 +1,21 @@
 #pragma once
 #include <vector>
 #include "Boop.h"
+#include "Food.h"
 #include "ContactListener.h"
 
 class Tournament
 {
 private:
-	std::vector<Food*> foods;
-	b2World *physWorld;
-	b2Body *groundBody;
 	ContactListener contactListener;
-	std::vector<Boop*> boops;
 
 public:
 	Tournament();
 	void setBoops(std::vector<Boop*> newBoops);
 	void manageFood();
-	int run();
+	std::vector<Food*> foods;
+	std::vector<Boop*> boops;
+	b2Body *groundBody;
+	b2World *physWorld;
+	vector<Boop*> run();
 };

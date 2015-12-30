@@ -14,7 +14,6 @@
 
 using namespace std;
 World *world = NULL;
-static b2World *physWorld = NULL;
 FPSTimer *fpsTimer = new FPSTimer(60);
 GLuint program;
 GLint attribute_coord2d;
@@ -36,10 +35,6 @@ void render()
 
 	fpsTimer->timeFrame();
 
-	float32 timeStep = 1.0f / 20.0f;
-	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
-	physWorld->Step(timeStep, velocityIterations, positionIterations);
 	glColor3f(1.f, 1.f, 1.f);
 	string fps = "FPS: " + (string)fpsTimer->getFps();
 	drawText(18, 18, GLUT_BITMAP_HELVETICA_18, (char*)fps.c_str());

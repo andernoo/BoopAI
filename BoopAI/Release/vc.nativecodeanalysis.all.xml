@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT>
+    <SFA>
+      <FILEPATH>d:\users\andrew\documents\githubvisualstudio\boopai\boopai\</FILEPATH>
+      <FILENAME>shader.cpp</FILENAME>
+      <LINE>32</LINE>
+      <COLUMN>9</COLUMN>
+    </SFA>
+    <DEFECTCODE>6031</DEFECTCODE>
+    <DESCRIPTION>Return value ignored: 'getchar'.</DESCRIPTION>
+    <FUNCTION>LoadShaders</FUNCTION>
+    <DECORATED>?LoadShaders@@YAIPBD0@Z</DECORATED>
+    <FUNCLINE>16</FUNCLINE>
+    <PATH />
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\users\andrew\documents\githubvisualstudio\boopai\boopai\</FILEPATH>
+      <FILENAME>world.cpp</FILENAME>
+      <LINE>146</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>Local declaration of 'i' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '130' of 'd:\users\andrew\documents\githubvisualstudio\boopai\boopai\world.cpp'.</DESCRIPTION>
+    <FUNCTION>World::writeToFile</FUNCTION>
+    <DECORATED>?writeToFile@World@@QAEXV?$vector@PAVBoop@@V?$allocator@PAVBoop@@@std@@@std@@@Z</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\users\andrew\documents\githubvisualstudio\boopai\boopai\</FILEPATH>
+        <FILENAME>world.cpp</FILENAME>
+        <LINE>130</LINE>
+        <COLUMN>28</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT></DEFECTS>
