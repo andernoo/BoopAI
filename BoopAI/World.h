@@ -13,9 +13,10 @@
 #include <Box2D\Box2D.h>
 
 #define NUM_PER_TOURNAMENT 8
-#define NUM_TOURNAMENTS 10
+#define NUM_TOURNAMENTS 1
 
-class World {
+class World
+{
 private:
 	void resetTournaments();
 public:

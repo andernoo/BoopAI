@@ -33,8 +33,10 @@ void render()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	fpsTimer->timeFrame();
+	//world->run();
+	world->render();
 
+	fpsTimer->timeFrame();
 	glColor3f(1.f, 1.f, 1.f);
 	string fps = "FPS: " + (string)fpsTimer->getFps();
 	drawText(18, 18, GLUT_BITMAP_HELVETICA_18, (char*)fps.c_str());
@@ -43,8 +45,6 @@ void render()
 	tournament = "Tournament: " + tournament;
 	drawText(18, 40, GLUT_BITMAP_HELVETICA_18, (char*)tournament.c_str());*/
 
-	//world->run();
-	world->render();
 	glutSwapBuffers();
 }
 

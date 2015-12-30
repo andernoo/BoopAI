@@ -3,7 +3,8 @@
 Tournament::Tournament()
 {
 	physWorld = new b2World(b2Vec2(0, 0));
-	physWorld->SetContactListener(&contactListener);
+	contactListener = new ContactListener;
+	physWorld->SetContactListener(contactListener);
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0, 0);
 	groundBodyDef.type = b2_staticBody;
@@ -60,7 +61,7 @@ vector<Boop*> Tournament::run()
 	float32 timeStep = 1.0f / 20.0f;
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;
-	//physWorld->Step(timeStep, velocityIterations, positionIterations);
+	physWorld->Step(timeStep, velocityIterations, positionIterations);
 
 	while (foods.size() < 30)
 	{

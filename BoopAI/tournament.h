@@ -7,7 +7,7 @@
 class Tournament
 {
 private:
-	ContactListener contactListener;
+	ContactListener *contactListener;
 
 public:
 	Tournament();

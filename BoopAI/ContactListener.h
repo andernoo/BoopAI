@@ -8,44 +8,48 @@ class ContactListener : public b2ContactListener
 	{
 		void *A = contact->GetFixtureA()->GetBody()->GetUserData();
 		void *B = contact->GetFixtureB()->GetBody()->GetUserData();
-		if (A && B)
+		if(A && B)
 		{
-			if (contact->GetFixtureA()->IsSensor() || contact->GetFixtureB()->IsSensor())
+			std::cout << "A && B is true " << contact->GetFixtureA()->GetBody()->GetUserData() << ", " << contact->GetFixtureB()->GetBody()->GetUserData() << std::endl;
+			Entity *eA = static_cast<Entity*>(A);
+			Entity *eB = static_cast<Entity*>(B);
+			//std::cout << eA->getEntityType() << std::endl;
+			//std::cout << eB->getEntityType() << std::endl;
+
+			/*if(contact->GetFixtureA()->IsSensor() || contact->GetFixtureB()->IsSensor())
 			{
-				if (static_cast<Entity*>(B)->getEntityType() == ET_FOOD)
+				if(eB->getEntityType() == ET_FOOD)
 				{
-					if (contact->GetFixtureA()->IsSensor())
-					{
-						contact->GetFixtureA()->SetUserData((void*)10);
-					}
+					contact->GetFixtureA()->SetUserData((void*)1);
 				}
-				if (static_cast<Entity*>(A)->getEntityType() == ET_FOOD)
+				if(eA->getEntityType() == ET_FOOD)
 				{
-					if (contact->GetFixtureB()->IsSensor())
-					{
-						contact->GetFixtureB()->SetUserData((void*)10);
-					}
+					contact->GetFixtureB()->SetUserData((void*)1);
 				}
 				return;
 			}
-			if (static_cast<Entity*>(A)->getEntityType() == ET_FOOD && static_cast<Entity*>(B)->getEntityType() == ET_BOOP)
+			else if(eA->getEntityType() == ET_FOOD && eB->getEntityType() == ET_BOOP)
 			{
 				Boop *boop = static_cast<Boop*>(B);
 				boop->eat(static_cast<Food*>(A));
 			}
-			else if (static_cast<Entity*>(B)->getEntityType() == ET_FOOD && static_cast<Entity*>(A)->getEntityType() == ET_BOOP)
+			else if(eB->getEntityType() == ET_FOOD && eA->getEntityType() == ET_BOOP)
 			{
 				Boop *boop = static_cast<Boop*>(A);
 				boop->eat(static_cast<Food*>(B));
-			}
+			}*/
+		}
+		else
+		{
+			//std::cout << "A && B is false " << A << " " << B << std::endl;
 		}
 	}
 
 	void EndContact(b2Contact* contact)
 	{
-		if (contact->GetFixtureA()->IsSensor())
-			contact->GetFixtureA()->SetUserData((void*)-10);
-		if (contact->GetFixtureB()->IsSensor())
-			contact->GetFixtureB()->SetUserData((void*)-10);
+		if(contact->GetFixtureA()->IsSensor())
+			contact->GetFixtureA()->SetUserData((void*)-1);
+		if(contact->GetFixtureB()->IsSensor())
+			contact->GetFixtureB()->SetUserData((void*)-1);
 	}
 };
