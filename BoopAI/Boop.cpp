@@ -80,26 +80,28 @@ void Boop::eat(Food *food)
 {
 	health += 200;
 	foodEaten++;
-	if (health > 1000)
+	if(health > 1000)
 		health = 1000;
 	//Don't delete food, add it to a remove list and process next. 
 	//We're in the callback at this point
 	food->eaten = true;
 }
 
-Boop *Boop::reproduce(Boop *parent) {
+Boop *Boop::reproduce(Boop *parent)
+{
 	// Child is exact copy of single parent
 	Boop *newBoop = new Boop();
 	std::vector<double> mother = nn.GetWeights();
 	std::vector<double> father = parent->nn.GetWeights();
 	std::vector<double> newweights;
-	for (int i = 0; i != mother.size(); i++)
+	for(int i = 0; i != mother.size(); i++)
 	{
-		if (rand() % 1000 < 500)
+		if(rand() % 1000 < 500)
 		{
 			newweights.push_back(mother.at(i));
 		}
-		else {
+		else
+		{
 			newweights.push_back(father.at(i));
 		}
 	}
@@ -109,12 +111,15 @@ Boop *Boop::reproduce(Boop *parent) {
 }
 
 // Method to update location
-void Boop::update() {
+void Boop::update()
+{
+	if(body == NULL)
+		return;
 	inputs.clear();
 
-	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	for(b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
-		if (fixture->IsSensor())
+		if(fixture->IsSensor())
 		{
 			inputs.push_back(((int)fixture->GetUserData()) > 0 ? 10 : -10);
 		}
@@ -123,12 +128,13 @@ void Boop::update() {
 	//update the brain and get feedback
 	std::vector<double> output = nn.update(inputs);
 
-	if (output[0] > 0.65)
+	if(output[0] > 0.65)
 	{
 		b2Vec2 force(1000 * output[0] * cos(body->GetAngle()), 1000 * output[0] * sin(body->GetAngle()));
 		body->ApplyForce(force, body->GetPosition(), true);
 	}
-	else if (output[0] < 0.35) {
+	else if(output[0] < 0.35)
+	{
 		b2Vec2 force(-1000 * output[0] * cos(body->GetAngle()), -1000 * output[0] * sin(body->GetAngle()));
 		body->ApplyForce(force, body->GetPosition(), true);
 	}
@@ -146,6 +152,8 @@ void Boop::update() {
 // Method to display
 void Boop::render()
 {
+	if(body == NULL)
+		return;
 	float angle = body->GetAngle();
 	b2Vec2 pos = body->GetPosition();
 
@@ -165,13 +173,13 @@ void Boop::render()
 	glVertex2f(10, -5);
 	glEnd();
 	glBegin(GL_TRIANGLES);
-	for (b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	for(b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
-		if (fixture->IsSensor())
+		if(fixture->IsSensor())
 		{
 			b2PolygonShape *shape = (b2PolygonShape*)fixture->GetShape();
 			glColor4f(1, ((int)fixture->GetUserData()) > 0 ? 0 : 1.f, ((int)fixture->GetUserData()) > 0 ? 0 : 1.f, 0.15f);
-			for (int i = 0; i < shape->m_count; i++)
+			for(int i = 0; i < shape->m_count; i++)
 			{
 				glVertex2f(shape->m_vertices[i].x, shape->m_vertices[i].y);
 			}
@@ -183,7 +191,8 @@ void Boop::render()
 }
 
 // Death
-bool Boop::dead() {
+bool Boop::dead()
+{
 	return health < 0.0;
 }
 

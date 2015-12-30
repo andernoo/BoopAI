@@ -18,4 +18,5 @@ public:
 	b2Body *groundBody;
 	b2World *physWorld;
 	vector<Boop*> run();
+	void reset();
 };

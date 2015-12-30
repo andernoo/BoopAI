@@ -55,8 +55,13 @@ void Tournament::setBoops(std::vector<Boop*> newBoops)
 	}
 }
 
-void Tournament::manageFood()
+vector<Boop*> Tournament::run()
 {
+	float32 timeStep = 1.0f / 20.0f;
+	int32 velocityIterations = 6;
+	int32 positionIterations = 2;
+	//physWorld->Step(timeStep, velocityIterations, positionIterations);
+
 	while (foods.size() < 30)
 	{
 		foods.push_back(new Food(physWorld));
@@ -72,16 +77,7 @@ void Tournament::manageFood()
 			f++;
 		}
 	}
-}
 
-vector<Boop*> Tournament::run()
-{
-	float32 timeStep = 1.0f / 20.0f;
-	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
-	physWorld->Step(timeStep, velocityIterations, positionIterations);
-
-	manageFood();
 	vector<Boop*> deadBoops;
 	for (auto i = boops.begin(); i != boops.end();)
 	{
@@ -99,4 +95,9 @@ vector<Boop*> Tournament::run()
 		}
 	}
 	return deadBoops;
+}
+
+void Tournament::reset()
+{
+
 }

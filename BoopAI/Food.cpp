@@ -8,7 +8,7 @@ Food::Food(b2World *physWorld)
 	myBodyDef.position.Set(mathRandom(0, WIDTH), mathRandom(0, HEIGHT));
 	myBodyDef.bullet = true;
 	body = physWorld->CreateBody(&myBodyDef);
-	body->SetUserData(this);
+	body->SetUserData((void*)"Test");
 	b2CircleShape circleShape;
 
 	b2FixtureDef fixtureDef;
