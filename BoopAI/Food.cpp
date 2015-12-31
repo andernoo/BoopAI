@@ -8,7 +8,7 @@ Food::Food(b2World *physWorld)
 	myBodyDef.position.Set(mathRandom(0, WIDTH), mathRandom(0, HEIGHT));
 	myBodyDef.bullet = true;
 	body = physWorld->CreateBody(&myBodyDef);
-	body->SetUserData((void*)"Test");
+	body->SetUserData(this);
 	b2CircleShape circleShape;
 
 	b2FixtureDef fixtureDef;
@@ -24,4 +24,9 @@ Food::~Food()
 int Food::getEntityType()
 {
 	return ET_FOOD;
+}
+
+void Food::contact(Entity *entity)
+{
+	std::cout << "FOOD CONTACT" << std::endl;
 }

@@ -33,8 +33,8 @@ public:
 	// Method to display
 	void render();
 
-	int getEntityType();
-
 	// Death
 	bool dead();
+	int getEntityType();
+	void contact(Entity * entity);
 };

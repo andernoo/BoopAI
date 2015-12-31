@@ -71,6 +71,7 @@ vector<Boop*> Tournament::run()
 		Food *food = (*f);
 		if (food->eaten == true)
 		{
+			physWorld->DestroyBody(food->body);
 			delete food;
 			f = foods.erase(f);
 		}

@@ -8,5 +8,6 @@ class Entity
 {
 public:
 	virtual int getEntityType() = 0;
+	virtual void contact(Entity *entity) {};
 };
 

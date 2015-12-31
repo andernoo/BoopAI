@@ -10,6 +10,6 @@ public:
 	b2Body *body;
 	Food(b2World *physWorld);
 	~Food();
-
 	int getEntityType();
+	void contact(Entity *entity);
 };

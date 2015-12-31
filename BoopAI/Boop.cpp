@@ -22,11 +22,8 @@ Boop::Boop()
 
 void Boop::destroyBody(b2World *physWorld)
 {
-	if(body == NULL)
-		return;
 	survived = (std::clock() - spawned) / (float)CLOCKS_PER_SEC;
 	physWorld->DestroyBody(body);
-	body = NULL;
 }
 
 void Boop::addBody(b2World *physWorld)
@@ -195,4 +192,14 @@ bool Boop::dead()
 int Boop::getEntityType()
 {
 	return ET_BOOP;
+}
+
+void Boop::contact(Entity *entity)
+{
+	std::cout << typeid(entity).name() << std::endl;
+	/*if(entity->getEntityType() == ET_BOOP)
+	{
+		eat(static_cast<Food*>(entity));
+	}*/
+	std::cout << "BOOP CONTACT" << std::endl;
 }
