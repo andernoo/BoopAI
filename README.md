@@ -1,11 +1,18 @@
 # BoopAI
 ##A neural network with genetic algorithms experiment
-There is definately a "peak" of performance which will need addressed, or perhaps they are as fit as they can get? Evolution is strange. 
+Little creatures that evolve using a Neural Network "brain". The plan is for a few "tournaments" to run simultaneously and report back to a master "world" controller which will handle the selective breeding of boops to increase their inteligence.
 
-I will be adding more things for them to do and adapt to, such as teaching them that the walls are bad and giving them more sensors, and better physics.
-
-###Getting smarterer!
-![Generation Graph](http://puu.sh/jZH5o/8083d24729.png)
+Currently being trained to eat as much food as they can, the code is in a non-functioning state while I add async calls.
 
 ###ToDo:
-- Teach them that the walls are bad, add a sensor to the front that detects physical objects, other boops and food. Or a sensor on all sides? A bump sensor might work.
+- Fix async code. I fear there are a few pointers being left behind during a call which, later, are being dereferenced.
+- Apply sensor logic. Check for: food, other boops, and walls. Eat food, hunt boops and avoid walls.
+  - Add more walls? Obsticles?
+- Make walls hurt. This will help natural selection for boops that avoid walls.
+- Neuron View. Graphics code to let us see what a selected boop is thinking.
+  - Which boop is selected should be choosable, preferably with the mouse.
+- Pause, menu and other buttons on the keyboard.
+  - Pause would be needed to select a boop for neuron view.
+
+###October: Getting smarterer!
+![Generation Graph](http://puu.sh/jZH5o/8083d24729.png)
