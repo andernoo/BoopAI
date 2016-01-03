@@ -24,6 +24,7 @@ void Boop::destroyBody(b2World *physWorld)
 {
 	survived = (std::clock() - spawned) / (float)CLOCKS_PER_SEC;
 	physWorld->DestroyBody(body);
+	body = NULL;
 }
 
 void Boop::addBody(b2World *physWorld)
@@ -34,8 +35,8 @@ void Boop::addBody(b2World *physWorld)
 	myBodyDef.type = b2_dynamicBody;
 	myBodyDef.position.Set((float)(rand() % WIDTH), (float)(rand() % HEIGHT));
 	myBodyDef.angle = ToRadian(mathRandom(0, 360));
-	myBodyDef.linearDamping = 1;
-	myBodyDef.angularDamping = 1;
+	myBodyDef.linearDamping = 0.5;
+	myBodyDef.angularDamping = 0.5;
 	body = physWorld->CreateBody(&myBodyDef);
 	body->SetUserData(this);
 
@@ -44,7 +45,7 @@ void Boop::addBody(b2World *physWorld)
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
-	fixtureDef.density = 0.1;
+	fixtureDef.density = 1;
 	body->CreateFixture(&fixtureDef);
 
 	b2PolygonShape polyShape;
@@ -80,7 +81,7 @@ void Boop::eat(Food *food)
 	health += 200;
 	foodEaten++;
 	if(health > 1000)
-		health = 1000;
+		1000;
 	//Don't delete food, add it to a remove list and process next. 
 	//We're in the callback at this point
 	food->eaten = true;
@@ -88,7 +89,6 @@ void Boop::eat(Food *food)
 
 Boop *Boop::reproduce(Boop *parent)
 {
-	// Child is exact copy of single parent
 	Boop *newBoop = new Boop();
 	std::vector<double> mother = nn.GetWeights();
 	std::vector<double> father = parent->nn.GetWeights();
@@ -112,44 +112,40 @@ Boop *Boop::reproduce(Boop *parent)
 // Method to update location
 void Boop::update()
 {
-	if(body == NULL)
-		return;
 	inputs.clear();
+	outputs.clear();
 
 	for(b2Fixture* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		if(fixture->IsSensor())
 		{
-			inputs.push_back(((int)fixture->GetUserData()) > 0 ? 10 : -10);
+			inputs.push_back((int)fixture->GetUserData());
 		}
 	}
 
 	//update the brain and get feedback
-	std::vector<double> output = nn.update(inputs);
+	outputs = nn.update(inputs);
 
-	double mappedForward = map(output[0], 0, 1, -1000, 1000);
+	double mappedForward = map(outputs[0], 0, 1, -1500, 1500);
 	b2Vec2 force(mappedForward * cos(body->GetAngle()), mappedForward * sin(body->GetAngle()));
 	body->ApplyForce(force, body->GetPosition(), true);
 
-	double mappedTurn = map(output[1], 0, 1, -300, 300);
+	double mappedTurn = map(outputs[1], 0, 1, -300, 300);
 	body->ApplyTorque(mappedTurn, true);
 
-	colour.x = (float)output[2] + 0.1f;
-	colour.y = (float)output[3] + 0.1f;
-	colour.z = (float)output[4] + 0.1f;
+	colour.x = (float)outputs[2] + 0.1f;
+	colour.y = (float)outputs[3] + 0.1f;
+	colour.z = (float)outputs[4] + 0.1f;
 	// Death always looming
-	health -= 0.1f;
+	health -= 1.4f;
 }
 
 // Method to display
 void Boop::render()
 {
-	if(body == NULL)
-		return;
 	float angle = body->GetAngle();
 	b2Vec2 pos = body->GetPosition();
 
-	glColor3f(colour.x, colour.y, colour.z);
 	glPushMatrix();
 	glTranslatef(pos.x, pos.y, 0);
 	glRotatef(ToDegree(angle), 0.0f, 0.0f, 1.0f);
@@ -170,6 +166,7 @@ void Boop::render()
 	glEnd();
 
 	//Begin old graphics code
+	glColor3f(colour.x, colour.y, colour.z);
 	glBegin(GL_TRIANGLE_STRIP);
 	glVertex2f(-10, 5);
 	glVertex2f(-10, -5);
@@ -189,6 +186,7 @@ bool Boop::dead()
 	return health < 0.0;
 }
 
+// ET_BOOP
 int Boop::getEntityType()
 {
 	return ET_BOOP;
@@ -196,10 +194,9 @@ int Boop::getEntityType()
 
 void Boop::contact(Entity *entity)
 {
-	std::cout << typeid(entity).name() << std::endl;
-	/*if(entity->getEntityType() == ET_BOOP)
+	if(entity->getEntityType() == ET_FOOD)
 	{
 		eat(static_cast<Food*>(entity));
-	}*/
+	}
 	std::cout << "BOOP CONTACT" << std::endl;
 }

@@ -9,6 +9,7 @@
 class Boop : public Entity {
 public:
 	std::vector<double> inputs;
+	std::vector<double> outputs;
 	b2Body* body=NULL;
 	unsigned int foodEaten=0;
 	NeuralNetwork nn;

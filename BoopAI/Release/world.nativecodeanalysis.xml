@@ -4,20 +4,20 @@
     <SFA>
       <FILEPATH>d:\users\andrew\documents\githubvisualstudio\boopai\boopai\</FILEPATH>
       <FILENAME>world.cpp</FILENAME>
-      <LINE>146</LINE>
-      <COLUMN>13</COLUMN>
+      <LINE>159</LINE>
+      <COLUMN>12</COLUMN>
     </SFA>
     <DEFECTCODE>6246</DEFECTCODE>
-    <DESCRIPTION>Local declaration of 'i' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '130' of 'd:\users\andrew\documents\githubvisualstudio\boopai\boopai\world.cpp'.</DESCRIPTION>
+    <DESCRIPTION>Local declaration of 'i' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '142' of 'd:\users\andrew\documents\githubvisualstudio\boopai\boopai\world.cpp'.</DESCRIPTION>
     <FUNCTION>World::writeToFile</FUNCTION>
     <DECORATED>?writeToFile@World@@QAEXV?$vector@PAVBoop@@V?$allocator@PAVBoop@@@std@@@std@@@Z</DECORATED>
-    <FUNCLINE>128</FUNCLINE>
+    <FUNCLINE>140</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>d:\users\andrew\documents\githubvisualstudio\boopai\boopai\</FILEPATH>
         <FILENAME>world.cpp</FILENAME>
-        <LINE>130</LINE>
-        <COLUMN>28</COLUMN>
+        <LINE>142</LINE>
+        <COLUMN>27</COLUMN>
       </SFA>
     </PATH>
   </DEFECT>

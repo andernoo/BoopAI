@@ -13,7 +13,7 @@
 #include <Box2D\Box2D.h>
 
 #define NUM_PER_TOURNAMENT 8
-#define NUM_TOURNAMENTS 1
+#define NUM_TOURNAMENTS 2
 
 class World
 {

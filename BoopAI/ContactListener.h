@@ -6,9 +6,20 @@ class ContactListener : public b2ContactListener
 {
 	void BeginContact(b2Contact* contact)
 	{
+		if (contact->GetFixtureA()->IsSensor())
+		{
+			contact->GetFixtureA()->SetUserData((void*)1);
+			return;
+		}
+		else if (contact->GetFixtureB()->IsSensor())
+		{
+			contact->GetFixtureB()->SetUserData((void*)1);
+			return;
+		}
+
 		void *A = contact->GetFixtureA()->GetBody()->GetUserData();
 		void *B = contact->GetFixtureB()->GetBody()->GetUserData();
-		if(A && B)
+		if (A && B)
 		{
 			Entity *eA = static_cast<Entity*>(A);
 			Entity *eB = static_cast<Entity*>(B);
@@ -18,9 +29,9 @@ class ContactListener : public b2ContactListener
 
 	void EndContact(b2Contact* contact)
 	{
-		if(contact->GetFixtureA()->IsSensor())
+		if (contact->GetFixtureA()->IsSensor())
 			contact->GetFixtureA()->SetUserData((void*)-1);
-		if(contact->GetFixtureB()->IsSensor())
+		if (contact->GetFixtureB()->IsSensor())
 			contact->GetFixtureB()->SetUserData((void*)-1);
 	}
 };

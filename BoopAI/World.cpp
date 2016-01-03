@@ -21,11 +21,11 @@ World::World(bool persist = false)
 	//}
 	//else {
 
-	for(int t = 0; t < NUM_TOURNAMENTS; t++)
+	for (int t = 0; t < NUM_TOURNAMENTS; t++)
 	{
 		tournaments.push_back(new Tournament());
 		std::vector<Boop*> boops;
-		for(int i = 0; i < NUM_PER_TOURNAMENT; i++)
+		for (int i = 0; i < NUM_PER_TOURNAMENT; i++)
 		{
 			boops.push_back(new Boop());
 		}
@@ -42,28 +42,35 @@ bool sortBoops(Boop *lhs, Boop *rhs)
 void World::render()
 {
 	Tournament *mainTournament = tournaments.at(0);
-
+	for (int i = 0; i < NUM_TOURNAMENTS; i++)
+	{
+		if (tournaments.at(i)->boops.size()>0)
+		{
+			mainTournament = tournaments.at(i);
+			break;
+		}
+	}
 	glColor3ub(250, 250, 210);
 	glPointSize(5);
 	glBegin(GL_POINTS);
-	for(auto i = mainTournament->foods.begin(); i != mainTournament->foods.end(); i++)
+	for (auto i = mainTournament->foods.begin(); i != mainTournament->foods.end(); i++)
 	{
 		glVertex2f((*i)->body->GetPosition().x, (*i)->body->GetPosition().y);
 	}
 	glEnd();
 	glPointSize(2);
 
-	for(auto i = mainTournament->boops.begin(); i != mainTournament->boops.end(); i++)
+	for (auto i = mainTournament->boops.begin(); i != mainTournament->boops.end(); i++)
 	{
 		(*i)->render();
 	}
 
 	glColor3f(0.4f, 0.4f, 0.4f);
-	for(b2Fixture* fixture = mainTournament->groundBody->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	for (b2Fixture* fixture = mainTournament->groundBody->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		glBegin(GL_QUADS);
 		b2PolygonShape *shape = (b2PolygonShape*)fixture->GetShape();
-		for(int i = 0; i < shape->m_count; i++)
+		for (int i = 0; i < shape->m_count; i++)
 		{
 			glVertex2f(shape->m_vertices[i].x, shape->m_vertices[i].y);
 		}
@@ -72,7 +79,7 @@ void World::render()
 
 	glColor3f(1.f, 1.f, 1.f);
 	glBegin(GL_POINTS);
-	for(b2Body *body = mainTournament->physWorld->GetBodyList(); body; body = body->GetNext())
+	for (b2Body *body = mainTournament->physWorld->GetBodyList(); body; body = body->GetNext())
 	{
 		glVertex2f(body->GetPosition().x, body->GetPosition().y);
 	}
@@ -87,25 +94,26 @@ void World::resetTournaments()
 	cout << "Winner survived: " << deadBoops.at(0)->survived << endl << endl;
 	cout << left << setw(27) << setfill('-') << "------ Top 5 Boops ------" << endl;
 	cout << setfill(' ') << "    | Ate |   Survived" << endl;
-	for(int i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		cout << right << setw(3) << i + 1 << " |" << setw(4) << deadBoops.at(i)->foodEaten << " |" << setw(10) << deadBoops.at(i)->survived << "s" << endl;
 	}
 	cout << endl << endl;
-	deadBoops.at(0)->foodEaten = 0;
-	deadBoops.at(0)->survived = 0;
-	for(Tournament *tournament : tournaments)
+	for (Tournament *tournament : tournaments)
 	{
 		tournament->reset();
 		std::vector<Boop*> boops;
-		for(int i = 0; boops.size() < NUM_PER_TOURNAMENT - 2; i++)
+		// Breed the boops. Breed the top NUM_PER_TOURNAMENT together, then re-insert the top boop
+		for (int i = 0; i < NUM_PER_TOURNAMENT / 2; i++)
 		{
 			boops.push_back(deadBoops.at(i)->reproduce(deadBoops.at(i + 1)));
-			boops.push_back(deadBoops.at(i)->reproduce(deadBoops.at(i + 1)));
+			boops.push_back(deadBoops.at(i + 1)->reproduce(deadBoops.at(i)));
 		}
 		boops.push_back(deadBoops.at(0));
-		boops.push_back(new Boop());
-		boops.push_back(new Boop());
+		while (boops.size() < NUM_PER_TOURNAMENT)
+		{
+			boops.push_back(new Boop());
+		}
 		tournament->setBoops(boops);
 	}
 }
@@ -113,36 +121,42 @@ void World::resetTournaments()
 // Run the world
 void World::run()
 {
-	std::vector<std::future<std::vector<Boop*>>> futures;
-	for(auto i = tournaments.begin(); i != tournaments.end(); i++)
+	std::vector<std::future<void>> futures;
+	for (auto i = tournaments.begin(); i != tournaments.end(); i++)
 	{
 		Tournament *t = (*i);
-		if(!t->boops.empty())
+		if (t->boops.empty())
+		{
+			if (t->deadBoops.size() > 0)
+			{
+				deadBoops.insert(deadBoops.end(), t->deadBoops.begin(), t->deadBoops.end());
+				t->deadBoops.clear();
+			}
+		}
+		else
 		{
 			futures.push_back(std::async(&Tournament::run, t));
 		}
 	}
-	if(futures.empty())
+	if (futures.empty())
 	{
 		resetTournaments();
 	}
 	else
 	{
-		for(auto &f : futures)
+		for (auto &f : futures)
 		{
 			f.wait();
-			std::vector<Boop*> newDeadBoops = f.get();
-			deadBoops.insert(deadBoops.end(), newDeadBoops.begin(), newDeadBoops.end());
 		}
 	}
 }
 
 void World::writeToFile(std::vector<Boop*> boops)
 {
-	for(auto i = boops.begin(); i != boops.end();)
+	for (auto i = boops.begin(); i != boops.end();)
 	{
 		static std::ofstream myfile;
-		if(!myfile.is_open())
+		if (!myfile.is_open())
 		{
 			time_t t = time(0);   // get time now
 			struct tm now;
@@ -156,7 +170,7 @@ void World::writeToFile(std::vector<Boop*> boops)
 		{
 			myfile << (*i)->survived << "," << (*i)->foodEaten;
 			vector<double> weights = (*i)->nn.GetWeights();
-			for(auto i = weights.begin(); i != weights.end(); i++)
+			for (auto i = weights.begin(); i != weights.end(); i++)
 			{
 				myfile << ',' << (*i);
 			}
