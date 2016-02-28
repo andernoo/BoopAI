@@ -38,9 +38,10 @@ bool sortBoops(Boop *lhs, Boop *rhs)
 	//return lhs->foodEaten > rhs->foodEaten;
 	return lhs->survived > rhs->survived;
 }
-
+std::mutex m;
 void World::render()
 {
+	m.lock();
 	Tournament *mainTournament = tournaments.at(0);
 	for (int i = 0; i < NUM_TOURNAMENTS; i++)
 	{
@@ -84,21 +85,22 @@ void World::render()
 		glVertex2f(body->GetPosition().x, body->GetPosition().y);
 	}
 	glEnd();
+	m.unlock();
 }
 
 void World::resetTournaments()
 {
 	std::sort(deadBoops.begin(), deadBoops.end(), sortBoops);
-	cout << "----- GENERATION ENDS -----" << endl;
-	cout << "Winner ate: " << deadBoops.at(0)->foodEaten << endl;
-	cout << "Winner survived: " << deadBoops.at(0)->survived << endl << endl;
-	cout << left << setw(27) << setfill('-') << "------ Top 5 Boops ------" << endl;
-	cout << setfill(' ') << "    | Ate |   Survived" << endl;
+	std::cout << "----- GENERATION ENDS -----" << std::endl;
+	std::cout << "Winner ate: " << deadBoops.at(0)->foodEaten << std::endl;
+	std::cout << "Winner survived: " << deadBoops.at(0)->survived << std::endl << std::endl;
+	std::cout << std::left << std::setw(27) << std::setfill('-') << "------ Top 5 Boops ------" << std::endl;
+	std::cout << std::setfill(' ') << "    | Ate |   Survived" << std::endl;
 	for (int i = 0; i < 5; i++)
 	{
-		cout << right << setw(3) << i + 1 << " |" << setw(4) << deadBoops.at(i)->foodEaten << " |" << setw(10) << deadBoops.at(i)->survived << "s" << endl;
+		std::cout << std::right << std::setw(3) << i + 1 << " |" << std::setw(4) << deadBoops.at(i)->foodEaten << " |" << std::setw(10) << deadBoops.at(i)->survived << "s" << std::endl;
 	}
-	cout << endl << endl;
+	std::cout << std::endl << std::endl;
 	for (Tournament *tournament : tournaments)
 	{
 		tournament->reset();
@@ -127,11 +129,8 @@ void World::run()
 		Tournament *t = (*i);
 		if (t->boops.empty())
 		{
-			if (t->deadBoops.size() > 0)
-			{
-				deadBoops.insert(deadBoops.end(), t->deadBoops.begin(), t->deadBoops.end());
-				t->deadBoops.clear();
-			}
+			deadBoops.insert(deadBoops.end(), t->deadBoops.begin(), t->deadBoops.end());
+			t->boops.clear();
 		}
 		else
 		{
@@ -169,7 +168,7 @@ void World::writeToFile(std::vector<Boop*> boops)
 		else
 		{
 			myfile << (*i)->survived << "," << (*i)->foodEaten;
-			vector<double> weights = (*i)->nn.GetWeights();
+			std::vector<double> weights = (*i)->nn->getWeights();
 			for (auto i = weights.begin(); i != weights.end(); i++)
 			{
 				myfile << ',' << (*i);

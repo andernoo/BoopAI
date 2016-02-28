@@ -18,6 +18,9 @@ Boop::~Boop()
 // Create a "boop" creature
 Boop::Boop()
 {
+	nn = new neuralNetwork(NUM_INPUTS, 0, NUM_OUTPUTS);
+	inputs.reserve(NUM_INPUTS);
+	outputs.reserve(NUM_OUTPUTS);
 }
 
 void Boop::destroyBody(b2World *physWorld)
@@ -90,8 +93,8 @@ void Boop::eat(Food *food)
 Boop *Boop::reproduce(Boop *parent)
 {
 	Boop *newBoop = new Boop();
-	std::vector<double> mother = nn.GetWeights();
-	std::vector<double> father = parent->nn.GetWeights();
+	std::vector<double> mother = nn->getWeights();
+	std::vector<double> father = parent->nn->getWeights();
 	std::vector<double> newweights;
 	for(int i = 0; i != mother.size(); i++)
 	{
@@ -104,8 +107,8 @@ Boop *Boop::reproduce(Boop *parent)
 			newweights.push_back(father.at(i));
 		}
 	}
-	newBoop->nn.PutWeights(newweights);
-	newBoop->nn.mutateWeights();
+	//newBoop->nn->PutWeights(newweights);
+	//newBoop->nn->mutateWeights();
 	return newBoop;
 }
 
@@ -124,7 +127,8 @@ void Boop::update()
 	}
 
 	//update the brain and get feedback
-	outputs = nn.update(inputs);
+	outputs = nn->feedForwardPattern(inputs);
+	//outputs = { 0,0,0,0,0 };
 
 	double mappedForward = map(outputs[0], 0, 1, -1500, 1500);
 	b2Vec2 force(mappedForward * cos(body->GetAngle()), mappedForward * sin(body->GetAngle()));
@@ -198,5 +202,4 @@ void Boop::contact(Entity *entity)
 	{
 		eat(static_cast<Food*>(entity));
 	}
-	std::cout << "BOOP CONTACT" << std::endl;
 }

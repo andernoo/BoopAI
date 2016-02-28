@@ -13,7 +13,7 @@ private:
 	std::chrono::high_resolution_clock::time_point lastRun = std::chrono::high_resolution_clock::now();
 
 public:
-	vector<Boop*> deadBoops;
+	std::vector<Boop*> deadBoops;
 	Tournament();
 	void setBoops(std::vector<Boop*> newBoops);
 	void manageFood();

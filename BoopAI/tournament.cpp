@@ -62,6 +62,11 @@ void Tournament::manageFood()
 {
 }
 
+bool predicate(Boop *b)
+{
+	return b->m_markedForDeath;
+}
+
 void Tournament::run()
 {
 	deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock().now() - lastRun);
@@ -83,27 +88,25 @@ void Tournament::run()
 			physWorld->DestroyBody(food->body);
 			delete food;
 			f = foods.erase(f);
-		}
-		else {
+		} else {
 			f++;
 		}
 	}
 
-	for (auto i = boops.begin(); i != boops.end();)
+	for (auto i = boops.begin(); i != boops.end(); i++)
 	{
 		Boop *b = (*i);
-		b->update();
 
 		if (b->dead()) 
 		{
-			deadBoops.push_back(b);
 			physWorld->DestroyBody(b->body);
-			i = boops.erase(i);
-		}
-		else {
-			i++;
+			deadBoops.push_back(b);
+			b->m_markedForDeath = true;
+		} else {
+			b->update();
 		}
 	}
+	boops.erase(std::remove_if(boops.begin(), boops.end(), predicate), boops.end());
 }
 
 void Tournament::reset()
