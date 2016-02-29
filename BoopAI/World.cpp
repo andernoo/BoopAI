@@ -38,6 +38,7 @@ bool sortBoops(Boop *lhs, Boop *rhs)
 	//return lhs->foodEaten > rhs->foodEaten;
 	return lhs->survived > rhs->survived;
 }
+
 std::mutex m;
 void World::render()
 {
@@ -91,7 +92,7 @@ void World::render()
 void World::resetTournaments()
 {
 	std::sort(deadBoops.begin(), deadBoops.end(), sortBoops);
-	std::cout << "----- GENERATION ENDS -----" << std::endl;
+	std::cout << std::endl << "----- GENERATION ENDS -----" << std::endl;
 	std::cout << "Winner ate: " << deadBoops.at(0)->foodEaten << std::endl;
 	std::cout << "Winner survived: " << deadBoops.at(0)->survived << std::endl << std::endl;
 	std::cout << std::left << std::setw(27) << std::setfill('-') << "------ Top 5 Boops ------" << std::endl;
@@ -123,31 +124,35 @@ void World::resetTournaments()
 // Run the world
 void World::run()
 {
-	std::vector<std::future<void>> futures;
+	bool running = false;
+	//std::vector<std::future<void>> futures;
 	for (auto i = tournaments.begin(); i != tournaments.end(); i++)
 	{
 		Tournament *t = (*i);
 		if (t->boops.empty())
 		{
 			deadBoops.insert(deadBoops.end(), t->deadBoops.begin(), t->deadBoops.end());
-			t->boops.clear();
+			t->deadBoops.clear();
 		}
 		else
 		{
-			futures.push_back(std::async(&Tournament::run, t));
+			running = true;
+			t->run();
+			//futures.push_back(std::async(&Tournament::run, t));
 		}
 	}
-	if (futures.empty())
+	//if (futures.empty())
+	if(!running)
 	{
 		resetTournaments();
 	}
-	else
-	{
-		for (auto &f : futures)
-		{
-			f.wait();
-		}
-	}
+	//else
+	//{
+	//	for (auto &f : futures)
+	//	{
+	//		f.wait();
+	//	}
+	//}
 }
 
 void World::writeToFile(std::vector<Boop*> boops)

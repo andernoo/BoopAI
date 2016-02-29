@@ -18,7 +18,7 @@ Boop::~Boop()
 // Create a "boop" creature
 Boop::Boop()
 {
-	nn = new neuralNetwork(NUM_INPUTS, 0, NUM_OUTPUTS);
+	nn = new neuralNetwork(NUM_INPUTS, NUM_HIDDEN, NUM_OUTPUTS);
 	inputs.reserve(NUM_INPUTS);
 	outputs.reserve(NUM_OUTPUTS);
 }
@@ -128,7 +128,6 @@ void Boop::update()
 
 	//update the brain and get feedback
 	outputs = nn->feedForwardPattern(inputs);
-	//outputs = { 0,0,0,0,0 };
 
 	double mappedForward = map(outputs[0], 0, 1, -1500, 1500);
 	b2Vec2 force(mappedForward * cos(body->GetAngle()), mappedForward * sin(body->GetAngle()));

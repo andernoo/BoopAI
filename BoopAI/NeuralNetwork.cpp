@@ -16,19 +16,19 @@ neuralNetwork::neuralNetwork(int nI, int nH, int nO) : nInput(nI), nHidden(nH), 
 {
 	//create neuron lists
 	//--------------------------------------------------------------------------------------------------------
-	inputNeurons = new(double[nInput + 1]);
+	inputNeurons.resize(nInput + 1);
 	for (int i = 0; i < nInput; i++) inputNeurons[i] = 0;
 
 	//create input bias neuron
 	inputNeurons[nInput] = -1;
 
-	hiddenNeurons = new(double[nHidden + 1]);
+	hiddenNeurons.resize(nHidden + 1);
 	for (int i = 0; i < nHidden; i++) hiddenNeurons[i] = 0;
 
 	//create hidden bias neuron
 	hiddenNeurons[nHidden] = -1;
 
-	outputNeurons = new(double[nOutput]);
+	outputNeurons.resize(nOutput);
 	for (int i = 0; i < nOutput; i++) outputNeurons[i] = 0;
 
 	//create weight lists (include bias neuron weights)
@@ -58,9 +58,9 @@ neuralNetwork::neuralNetwork(int nI, int nH, int nO) : nInput(nI), nHidden(nH), 
 neuralNetwork::~neuralNetwork()
 {
 	//delete neurons
-	delete[] inputNeurons;
-	delete[] hiddenNeurons;
-	delete[] outputNeurons;
+	inputNeurons.clear();
+	hiddenNeurons.clear();
+	outputNeurons.clear();
 
 	//delete weight storage
 	for (int i = 0; i <= nInput; i++) delete[] wInputHidden[i];
@@ -234,12 +234,7 @@ std::vector<double> neuralNetwork::feedForwardPattern(std::vector<double> inputs
 {
 	feedForward(inputs);
 
-	//create copy of output results
-	std::vector<double> results(nOutput);
-	for (int i = 0; i < nOutput; i++)
-		results.push_back(clampOutput(outputNeurons[i]));
-
-	return results;
+	return outputNeurons;
 }
 /*******************************************************************
 * Return the NN accuracy on the set
@@ -351,7 +346,8 @@ inline int neuralNetwork::clampOutput(double x)
 void neuralNetwork::feedForward(std::vector<double> inputs)
 {
 	//set input neurons to input values
-	for (int i = 0; i < nInput; i++) inputNeurons[i] = inputs.at(i);
+	for (int i = 0; i < nInput; i++) 
+		inputNeurons[i] = inputs.at(i);
 
 	//Calculate Hidden Layer values - include bias neuron
 	//--------------------------------------------------------------------------------------------------------
@@ -375,7 +371,8 @@ void neuralNetwork::feedForward(std::vector<double> inputs)
 		outputNeurons[k] = 0;
 
 		//get weighted sum of pattern and bias neuron
-		for (int j = 0; j <= nHidden; j++) outputNeurons[k] += hiddenNeurons[j] * wHiddenOutput[j][k];
+		for (int j = 0; j <= nHidden; j++) 
+			outputNeurons[k] += hiddenNeurons[j] * wHiddenOutput[j][k];
 
 		//set to result of sigmoid
 		outputNeurons[k] = activationFunction(outputNeurons[k]);
