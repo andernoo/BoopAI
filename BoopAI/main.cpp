@@ -33,7 +33,6 @@ void render()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//world->run();
 	world->render();
 
 	fpsTimer->timeFrame();
@@ -46,7 +45,7 @@ void render()
 	drawText(18, 40, GLUT_BITMAP_HELVETICA_18, (char*)tournament.c_str());*/
 	if (world->tournaments[0]->boops.size() > 0 && world->tournaments[0]->boops.at(0)->outputs.size() > 0)
 	{
-		string weight = std::to_string(world->tournaments[0]->boops.at(0)->outputs[0]);
+		string weight = std::to_string(world->tournaments[0]->boops[0]->outputs[0]);
 		drawText(18, 40, GLUT_BITMAP_HELVETICA_18, (char*)weight.c_str());
 		weight = std::to_string(world->tournaments[0]->boops.at(0)->outputs[1]);
 		drawText(18, 62, GLUT_BITMAP_HELVETICA_18, (char*)weight.c_str());

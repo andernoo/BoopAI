@@ -107,7 +107,7 @@ Boop *Boop::reproduce(Boop *parent)
 			newweights.push_back(father.at(i));
 		}
 	}
-	//newBoop->nn->PutWeights(newweights);
+	newBoop->nn->putWeights(newweights);
 	//newBoop->nn->mutateWeights();
 	return newBoop;
 }

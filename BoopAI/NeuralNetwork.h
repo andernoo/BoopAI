@@ -22,9 +22,9 @@ private:
 	int nInput, nHidden, nOutput;
 
 	//neurons
-	double* inputNeurons;
-	double* hiddenNeurons;
-	double* outputNeurons;
+	std::vector<double> inputNeurons;
+	std::vector<double> hiddenNeurons;
+	std::vector<double> outputNeurons;
 
 	//weights
 	double** wInputHidden;
@@ -47,6 +47,7 @@ public:
 	bool loadWeights(char* inputFilename);
 	bool saveWeights(char* outputFilename);
 	std::vector<double> getWeights();
+	void setWeights(std::vector<double> weights);
 	std::vector<double> feedForwardPattern(std::vector<double> inputs);
 	//double getSetAccuracy(std::vector<dataEntry*>& set);
 	//double getSetMSE(std::vector<dataEntry*>& set);

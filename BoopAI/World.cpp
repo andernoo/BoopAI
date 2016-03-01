@@ -35,8 +35,8 @@ World::World(bool persist = false)
 
 bool sortBoops(Boop *lhs, Boop *rhs)
 {
-	//return lhs->foodEaten > rhs->foodEaten;
-	return lhs->survived > rhs->survived;
+	return lhs->foodEaten > rhs->foodEaten;
+	//return lhs->survived > rhs->survived;
 }
 
 std::mutex m;
