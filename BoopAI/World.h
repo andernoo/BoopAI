@@ -13,8 +13,8 @@
 #include <GL\glew.h>
 #include <Box2D\Box2D.h>
 
-#define NUM_PER_TOURNAMENT 80
-#define NUM_TOURNAMENTS 2
+#define NUM_PER_TOURNAMENT 12
+#define NUM_TOURNAMENTS 8
 
 class World
 {

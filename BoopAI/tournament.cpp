@@ -50,7 +50,7 @@ Tournament::Tournament()
 void Tournament::setBoops(std::vector<Boop*> newBoops)
 {
 	boops = newBoops;
-	for (Boop *boop : boops)
+	for(Boop *boop : boops)
 	{
 		boop->addBody(physWorld);
 		boop->health = 200;
@@ -62,54 +62,55 @@ void Tournament::manageFood()
 {
 }
 
-bool predicate(Boop *b)
+bool boopPredicate(Boop *b)
 {
 	return b->m_markedForDeath;
+}
+
+bool foodPredicate(Food *f)
+{
+	return f->eaten;
 }
 
 void Tournament::run()
 {
 	deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock().now() - lastRun);
 
-	//float32 timeStep = 1.0f / 60.0f;
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;
 	physWorld->Step(deltaTime.count(), velocityIterations, positionIterations);
 	lastRun = std::chrono::high_resolution_clock().now();
-	while (foods.size() < 30)
+
+	for(auto f = foods.begin(); f != foods.end(); f++)
+	{
+		Food *food = (*f);
+		if(food->eaten == true)
+		{
+			physWorld->DestroyBody(food->body);
+		}
+	}
+	foods.erase(std::remove_if(foods.begin(), foods.end(), foodPredicate), foods.end());
+
+	while(foods.size() < 60)
 	{
 		foods.push_back(new Food(physWorld));
 	}
 
-	for (auto f = foods.begin(); f != foods.end();) {
-		Food *food = (*f);
-		if (food->eaten == true)
-		{
-			physWorld->DestroyBody(food->body);
-			delete food;
-			f = foods.erase(f);
-		} else {
-			f++;
-		}
-	}
-
-	for (auto i = boops.begin(); i != boops.end(); i++)
+	for(auto i = boops.begin(); i != boops.end(); i++)
 	{
 		Boop *b = (*i);
+		b->update();
 
-		if (b->dead()) 
+		if(b->dead())
 		{
 			physWorld->DestroyBody(b->body);
 			deadBoops.push_back(b);
 			b->m_markedForDeath = true;
-		} else {
-			b->update();
 		}
 	}
-	boops.erase(std::remove_if(boops.begin(), boops.end(), predicate), boops.end());
+	boops.erase(std::remove_if(boops.begin(), boops.end(), boopPredicate), boops.end());
 }
 
 void Tournament::reset()
 {
-
 }
