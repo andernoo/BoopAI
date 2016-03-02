@@ -112,6 +112,7 @@ void World::resetTournaments()
 			boops.push_back(deadBoops.at(i)->reproduce(deadBoops.at(i + 1)));
 			boops.push_back(deadBoops.at(i + 1)->reproduce(deadBoops.at(i)));
 		}
+		deadBoops.at(0)->foodEaten = 0;
 		boops.push_back(deadBoops.at(0));
 		while (boops.size() < NUM_PER_TOURNAMENT)
 		{

@@ -1,385 +1,224 @@
-//standard includes
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <math.h>
-
-//include definition file
 #include "NeuralNetwork.h"
+#include "math_3d.h"
+#include <iostream>
 
-using namespace std;
+Neuron::Neuron(int NumInputs) : m_NumInputs(NumInputs + 1)
 
-/*******************************************************************
-* Constructor
-********************************************************************/
-neuralNetwork::neuralNetwork(int nI, int nH, int nO) : nInput(nI), nHidden(nH), nOutput(nO)
 {
-	//create neuron lists
-	//--------------------------------------------------------------------------------------------------------
-	inputNeurons.resize(nInput + 1);
-	for(int i = 0; i < nInput; i++) inputNeurons[i] = 0;
-
-	//create input bias neuron
-	inputNeurons[nInput] = -1;
-
-	hiddenNeurons.resize(nHidden + 1);
-	for(int i = 0; i < nHidden; i++) hiddenNeurons[i] = 0;
-
-	//create hidden bias neuron
-	hiddenNeurons[nHidden] = -1;
-
-	outputNeurons.resize(nOutput);
-	for(int i = 0; i < nOutput; i++) outputNeurons[i] = 0;
-
-	//create weight lists (include bias neuron weights)
-	//--------------------------------------------------------------------------------------------------------
-	wInputHidden = new(double*[nInput + 1]);
-	for(int i = 0; i <= nInput; i++)
+	//we need an additional weight for the bias hence the +1
+	for(int i = 0; i < NumInputs + 1; ++i)
 	{
-		wInputHidden[i] = new (double[nHidden]);
-		for(int j = 0; j < nHidden; j++) wInputHidden[i][j] = 0;
+		//set up the weights with an initial random value
+		m_vecWeight.push_back(-1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - -1))));
 	}
-
-	wHiddenOutput = new(double*[nHidden + 1]);
-	for(int i = 0; i <= nHidden; i++)
-	{
-		wHiddenOutput[i] = new (double[nOutput]);
-		for(int j = 0; j < nOutput; j++) wHiddenOutput[i][j] = 0;
-	}
-
-	//initialize weights
-	//--------------------------------------------------------------------------------------------------------
-	initializeWeights();
 }
 
-/*******************************************************************
-* Destructor
-********************************************************************/
-neuralNetwork::~neuralNetwork()
+NeuronLayer::NeuronLayer(int NumNeurons,
+	int NumInputsPerNeuron) : m_NumNeurons(NumNeurons)
 {
-	//delete neurons
-	inputNeurons.clear();
-	hiddenNeurons.clear();
-	outputNeurons.clear();
+	for(int i = 0; i < NumNeurons; ++i)
 
-	//delete weight storage
-	for(int i = 0; i <= nInput; i++) delete[] wInputHidden[i];
-	delete[] wInputHidden;
-
-	for(int j = 0; j <= nHidden; j++) delete[] wHiddenOutput[j];
-	delete[] wHiddenOutput;
+		m_vecNeurons.push_back(Neuron(NumInputsPerNeuron));
 }
-/*******************************************************************
-* Load Neuron Weights
-********************************************************************/
-bool neuralNetwork::loadWeights(char* filename)
+
+NeuralNetwork::NeuralNetwork(int numInputs, int numHidden, int numOutputs, int numPerHidden) :
+	m_NumInputs(numInputs), m_NumOutputs(numOutputs), m_NumHiddenLayers(numHidden), m_NeuronsPerHiddenLayer(numPerHidden)
 {
-	//open file for reading
-	fstream inputFile;
-	inputFile.open(filename, ios::in);
+	//m_NumInputs = 3;
+	//m_NumOutputs = 5;
+	//m_NumHiddenLayers = 0;
+	//m_NeuronsPerHiddenLayer = 4;
 
-	if(inputFile.is_open())
+	CreateNet();
+
+}
+
+void NeuralNetwork::CreateNet()
+{
+	//create the layers of the network
+	if(m_NumHiddenLayers > 0)
 	{
-		vector<double> weights;
-		string line = "";
+		//create first hidden layer
+		m_vecLayers.push_back(NeuronLayer(m_NeuronsPerHiddenLayer, m_NumInputs));
 
-		//read data
-		while(!inputFile.eof())
+		for(int i = 0; i < m_NumHiddenLayers - 1; ++i)
 		{
-			getline(inputFile, line);
 
-			//process line
-			if(line.length() > 2)
-			{
-				//store inputs		
-				char* cstr = new char[line.size() + 1];
-				char* t;
-				strcpy(cstr, line.c_str());
-
-				//tokenise
-				int i = 0;
-				t = strtok(cstr, ",");
-
-				while(t != NULL)
-				{
-					weights.push_back(atof(t));
-
-					//move token onwards
-					t = strtok(NULL, ",");
-					i++;
-				}
-
-				//free memory
-				delete[] cstr;
-			}
+			m_vecLayers.push_back(NeuronLayer(m_NeuronsPerHiddenLayer, m_NeuronsPerHiddenLayer));
 		}
 
-		//check if sufficient weights were loaded
-		if(weights.size() != ((nInput + 1) * nHidden + (nHidden + 1) * nOutput))
-		{
-			cout << endl << "Error - Incorrect number of weights in input file: " << filename << endl;
-
-			//close file
-			inputFile.close();
-
-			return false;
-		}
-		else
-		{
-			//set weights
-			int pos = 0;
-
-			for(int i = 0; i <= nInput; i++)
-			{
-				for(int j = 0; j < nHidden; j++)
-				{
-					wInputHidden[i][j] = weights[pos++];
-				}
-			}
-
-			for(int i = 0; i <= nHidden; i++)
-			{
-				for(int j = 0; j < nOutput; j++)
-				{
-					wHiddenOutput[i][j] = weights[pos++];
-				}
-			}
-
-			//print success
-			cout << endl << "Neuron weights loaded successfuly from '" << filename << "'" << endl;
-
-			//close file
-			inputFile.close();
-
-			return true;
-		}
+		//create output layer
+		m_vecLayers.push_back(NeuronLayer(m_NumOutputs, m_NeuronsPerHiddenLayer));
 	}
+
 	else
 	{
-		cout << endl << "Error - Weight input file '" << filename << "' could not be opened: " << endl;
-		return false;
-	}
-}
-/*******************************************************************
-* Save Neuron Weights
-********************************************************************/
-bool neuralNetwork::saveWeights(char* filename)
-{
-	//open file for reading
-	fstream outputFile;
-	outputFile.open(filename, ios::out);
-
-	if(outputFile.is_open())
-	{
-		outputFile.precision(50);
-
-		//output weights
-		for(int i = 0; i <= nInput; i++)
-		{
-			for(int j = 0; j < nHidden; j++)
-			{
-				outputFile << wInputHidden[i][j] << ",";
-			}
-		}
-
-		for(int i = 0; i <= nHidden; i++)
-		{
-			for(int j = 0; j < nOutput; j++)
-			{
-				outputFile << wHiddenOutput[i][j];
-				if(i * nOutput + j + 1 != (nHidden + 1) * nOutput) outputFile << ",";
-			}
-		}
-
-		//print success
-		cout << endl << "Neuron weights saved to '" << filename << "'" << endl;
-
-		//close file
-		outputFile.close();
-
-		return true;
-	}
-	else
-	{
-		cout << endl << "Error - Weight output file '" << filename << "' could not be created: " << endl;
-		return false;
+		//create output layer
+		m_vecLayers.push_back(NeuronLayer(m_NumOutputs, m_NumInputs));
 	}
 }
 
-std::vector<double> neuralNetwork::getWeights()
+vector<double> NeuralNetwork::getWeights() const
 {
-	std::vector<double> weights;
-	//output weights
-	for(int i = 0; i <= nInput; i++)
+	//this will hold the weights
+	vector<double> weights;
+
+	//for each layer
+	for(int i = 0; i < m_NumHiddenLayers + 1; ++i)
 	{
-		for(int j = 0; j < nHidden; j++)
+
+		//for each neuron
+		for(int j = 0; j < m_vecLayers[i].m_NumNeurons; ++j)
 		{
-			weights.push_back(wInputHidden[i][j]);
+			//for each weight
+			for(int k = 0; k < m_vecLayers[i].m_vecNeurons[j].m_NumInputs; ++k)
+			{
+				weights.push_back(m_vecLayers[i].m_vecNeurons[j].m_vecWeight[k]);
+			}
 		}
 	}
 
-	for(int i = 0; i <= nHidden; i++)
+	return weights;
+}
+
+void NeuralNetwork::setWeights(vector<double> &weights)
+{
+	int cWeight = 0;
+
+	//for each layer
+	for(int i = 0; i < m_NumHiddenLayers + 1; ++i)
 	{
-		for(int j = 0; j < nOutput; j++)
+
+		//for each neuron
+		for(int j = 0; j < m_vecLayers[i].m_NumNeurons; ++j)
 		{
-			weights.push_back(wHiddenOutput[i][j]);
+			//for each weight
+			for(int k = 0; k < m_vecLayers[i].m_vecNeurons[j].m_NumInputs; ++k)
+			{
+				m_vecLayers[i].m_vecNeurons[j].m_vecWeight[k] = weights[cWeight++];
+			}
+		}
+	}
+
+	return;
+}
+
+//---------------------------------GetNumberOfWeights---------------------
+//
+//	returns the total number of weights needed for the net
+//
+//------------------------------------------------------------------------
+int NeuralNetwork::GetNumberOfWeights() const
+{
+	int weights = 0;
+
+	//for each layer
+	for(int i = 0; i < m_NumHiddenLayers + 1; ++i)
+	{
+		//for each neuron
+		for(int j = 0; j < m_vecLayers[i].m_NumNeurons; ++j)
+		{
+			//for each weight
+			for(int k = 0; k < m_vecLayers[i].m_vecNeurons[j].m_NumInputs; ++k)
+				weights++;
 		}
 	}
 	return weights;
 }
 
-void neuralNetwork::setWeights(std::vector<double> weights)
+//-------------------------------Update-----------------------------------
+//
+//	given an input vector this function calculates the output vector
+//
+//------------------------------------------------------------------------
+vector<double> NeuralNetwork::update(vector<double> &inputs)
 {
-}
+	//stores the resultant outputs from each layer
+	vector<double> outputs;
 
-/*******************************************************************
-* Feed pattern through network and return results
-********************************************************************/
-std::vector<double> neuralNetwork::feedForwardPattern(std::vector<double> inputs)
-{
-	feedForward(inputs);
+	int cWeight = 0;
 
-	return outputNeurons;
-}
-/*******************************************************************
-* Return the NN accuracy on the set
-********************************************************************/
-//double neuralNetwork::getSetAccuracy(std::vector<dataEntry*>& set)
-//{
-//	double incorrectResults = 0;
-//
-//	//for every training input array
-//	for (int tp = 0; tp < (int)set.size(); tp++)
-//	{
-//		//feed inputs through network and backpropagate errors
-//		feedForward(set[tp]->pattern);
-//
-//		//correct pattern flag
-//		bool correctResult = true;
-//
-//		//check all outputs against desired output values
-//		for (int k = 0; k < nOutput; k++)
-//		{
-//			//set flag to false if desired and output differ
-//			if (clampOutput(outputNeurons[k]) != set[tp]->target[k]) correctResult = false;
-//		}
-//
-//		//inc training error for a incorrect result
-//		if (!correctResult) incorrectResults++;
-//
-//	}//end for
-//
-//	 //calculate error and return as percentage
-//	return 100 - (incorrectResults / set.size() * 100);
-//}
-/*******************************************************************
-* Return the NN mean squared error on the set
-********************************************************************/
-//double neuralNetwork::getSetMSE(std::vector<dataEntry*>& set)
-//{
-//	double mse = 0;
-//
-//	//for every training input array
-//	for (int tp = 0; tp < (int)set.size(); tp++)
-//	{
-//		//feed inputs through network and backpropagate errors
-//		feedForward(set[tp]->pattern);
-//
-//		//check all outputs against desired output values
-//		for (int k = 0; k < nOutput; k++)
-//		{
-//			//sum all the MSEs together
-//			mse += pow((outputNeurons[k] - set[tp]->target[k]), 2);
-//		}
-//
-//	}//end for
-//
-//	 //calculate error and return as percentage
-//	return mse / (nOutput * set.size());
-//}
-/*******************************************************************
-* Initialize Neuron Weights
-********************************************************************/
-void neuralNetwork::initializeWeights()
-{
-	//set range
-	double rH = 1 / sqrt((double)nInput);
-	double rO = 1 / sqrt((double)nHidden);
-
-	//set weights between input and hidden 		
-	//--------------------------------------------------------------------------------------------------------
-	for(int i = 0; i <= nInput; i++)
+	//first check that we have the correct amount of inputs
+	if(inputs.size() != m_NumInputs)
 	{
-		for(int j = 0; j < nHidden; j++)
+		//just return an empty vector if incorrect.
+		return outputs;
+	}
+
+	//For each layer....
+	for(int i = 0; i < m_NumHiddenLayers + 1; ++i)
+	{
+		if(i > 0)
 		{
-			//set weights to random values
-			wInputHidden[i][j] = (((double)(rand() % 100) + 1) / 100 * 2 * rH) - rH;
+			inputs = outputs;
+		}
+
+		outputs.clear();
+
+		cWeight = 0;
+
+		//for each neuron sum the (inputs corresponding weights).Throw 
+		//the total at our sigmoid function to get the output.
+		for(int j = 0; j < m_vecLayers[i].m_NumNeurons; ++j)
+		{
+			double netinput = 0;
+
+			int	NumInputs = m_vecLayers[i].m_vecNeurons[j].m_NumInputs;
+
+			//for each weight
+			for(int k = 0; k < NumInputs - 1; ++k)
+			{
+				//sum the weights x inputs
+				netinput += m_vecLayers[i].m_vecNeurons[j].m_vecWeight[k] *
+					inputs[cWeight++];
+			}
+
+			//add in the bias
+			netinput += m_vecLayers[i].m_vecNeurons[j].m_vecWeight[NumInputs - 1];
+
+			//we can store the outputs from each layer as we generate them. 
+			//The combined activation is first filtered through the sigmoid 
+			//function
+			outputs.push_back(Sigmoid(netinput, 1));
+
+			cWeight = 0;
 		}
 	}
 
-	//set weights between input and hidden
-	//--------------------------------------------------------------------------------------------------------
-	for(int i = 0; i <= nHidden; i++)
+	return outputs;
+}
+
+//-------------------------------Sigmoid function-------------------------
+//
+//------------------------------------------------------------------------
+double NeuralNetwork::Sigmoid(double netinput, double response)
+{
+	return (1 / (1 + exp(-netinput / response)));
+	//return tanh(netinput);
+}
+
+void NeuralNetwork::mutateWeights()
+{
+	int cWeight = 0;
+
+	//for each layer
+	for(int i = 0; i < m_NumHiddenLayers + 1; ++i)
 	{
-		for(int j = 0; j < nOutput; j++)
+
+		//for each neuron
+		for(int j = 0; j < m_vecLayers[i].m_NumNeurons; ++j)
 		{
-			//set weights to random values
-			wHiddenOutput[i][j] = (((double)(rand() % 100) + 1) / 100 * 2 * rO) - rO;
+			//for each weight
+			for(int k = 0; k < m_vecLayers[i].m_vecNeurons[j].m_NumInputs; ++k)
+			{
+				if(rand() % 100 == 1)
+				{
+					//std::cout << "Mutating weight" << std::endl;
+					m_vecLayers[i].m_vecNeurons[j].m_vecWeight[k] += (double)mathRandom(-0.1f, 0.1f);
+				}
+			}
 		}
 	}
-}
-/*******************************************************************
-* Activation Function
-********************************************************************/
-inline double neuralNetwork::activationFunction(double x)
-{
-	//sigmoid function
-	return 1 / (1 + exp(-x));
-}
-/*******************************************************************
-* Output Clamping
-********************************************************************/
-inline int neuralNetwork::clampOutput(double x)
-{
-	if(x < 0.1) return 0;
-	else if(x > 0.9) return 1;
-	else return -1;
-}
-/*******************************************************************
-* Feed Forward Operation
-********************************************************************/
-void neuralNetwork::feedForward(std::vector<double> inputs)
-{
-	//set input neurons to input values
-	for(int i = 0; i < nInput; i++)
-		inputNeurons[i] = inputs.at(i);
 
-	//Calculate Hidden Layer values - include bias neuron
-	//--------------------------------------------------------------------------------------------------------
-	for(int j = 0; j < nHidden; j++)
-	{
-		//clear value
-		hiddenNeurons[j] = 0;
-
-		//get weighted sum of pattern and bias neuron
-		for(int i = 0; i <= nInput; i++) hiddenNeurons[j] += inputNeurons[i] * wInputHidden[i][j];
-
-		//set to result of sigmoid
-		hiddenNeurons[j] = activationFunction(hiddenNeurons[j]);
-	}
-
-	//Calculating Output Layer values - include bias neuron
-	//--------------------------------------------------------------------------------------------------------
-	for(int k = 0; k < nOutput; k++)
-	{
-		//clear value
-		outputNeurons[k] = 0;
-
-		//get weighted sum of pattern and bias neuron
-		for(int j = 0; j <= nHidden; j++)
-			outputNeurons[k] += hiddenNeurons[j] * wHiddenOutput[j][k];
-
-		//set to result of sigmoid
-		outputNeurons[k] = activationFunction(outputNeurons[k]);
-	}
+	return;
 }

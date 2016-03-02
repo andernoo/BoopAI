@@ -9,13 +9,14 @@
 #define NUM_OUTPUTS 7
 #define NUM_INPUTS 3
 #define NUM_HIDDEN 1
+#define NUM_PERHIDDEN 4
 class Boop : public Entity {
 public:
 	std::vector<double> inputs;
 	std::vector<double> outputs;
 	b2Body* body=NULL;
 	unsigned int foodEaten=0;
-	neuralNetwork *nn;
+	NeuralNetwork *nn;
 	float health=200;
 	float survived=0;
 	std::clock_t spawned;

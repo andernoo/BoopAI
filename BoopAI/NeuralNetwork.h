@@ -1,67 +1,76 @@
-/*******************************************************************
-* Basic Feed Forward Neural Network Class
-* ------------------------------------------------------------------
-* Bobby Anguelov - takinginitiative.wordpress.com (2008)
-* MSN & email: banguelov@cs.up.ac.za
-********************************************************************/
+#pragma once
+#include <vector>
+#include <fstream>
+#include <math.h>
 
-#ifndef NNetwork
-#define NNetwork
+using namespace std;
 
-#include "dataReader.h"
-
-class neuralNetworkTrainer;
-
-class neuralNetwork
+//-------------------------------------------------------------------
+//	define neuron struct
+//-------------------------------------------------------------------
+struct Neuron
 {
-	//class members
-	//--------------------------------------------------------------------------------------------
-private:
+	//the number of inputs into the neuron
+	int				      m_NumInputs;
 
-	//number of neurons
-	int nInput, nHidden, nOutput;
+	//the weights for each input
+	vector<double>	m_vecWeight;
 
-	//neurons
-	std::vector<double> inputNeurons;
-	std::vector<double> hiddenNeurons;
-	std::vector<double> outputNeurons;
 
-	//weights
-	double** wInputHidden;
-	double** wHiddenOutput;
-
-	//Friends
-	//--------------------------------------------------------------------------------------------
-	friend neuralNetworkTrainer;
-
-	//public methods
-	//--------------------------------------------------------------------------------------------
-
-public:
-
-	//constructor & destructor
-	neuralNetwork(int numInput, int numHidden, int numOutput);
-	~neuralNetwork();
-
-	//weight operations
-	bool loadWeights(char* inputFilename);
-	bool saveWeights(char* outputFilename);
-	std::vector<double> getWeights();
-	void setWeights(std::vector<double> weights);
-	std::vector<double> feedForwardPattern(std::vector<double> inputs);
-	//double getSetAccuracy(std::vector<dataEntry*>& set);
-	//double getSetMSE(std::vector<dataEntry*>& set);
-
-	//private methods
-	//--------------------------------------------------------------------------------------------
-
-private:
-
-	void initializeWeights();
-	inline double activationFunction(double x);
-	inline int clampOutput(double x);
-	void feedForward(std::vector<double> inputs);
-
+	//ctor
+	Neuron(int NumInputs);
 };
 
-#endif
+
+//---------------------------------------------------------------------
+//	struct to hold a layer of neurons.
+//---------------------------------------------------------------------
+
+struct NeuronLayer
+{
+	//the number of neurons in this layer
+	int					      m_NumNeurons;
+
+	//the layer of neurons
+	vector<Neuron>		m_vecNeurons;
+
+	NeuronLayer(int NumNeurons,
+		int NumInputsPerNeuron);
+};
+
+
+//----------------------------------------------------------------------
+//	neural net class
+//----------------------------------------------------------------------
+
+class NeuralNetwork
+{
+private:
+	int	m_NumInputs;
+	int m_NumOutputs;
+	int m_NumHiddenLayers;
+	int m_NeuronsPerHiddenLayer;
+
+	//storage for each layer of neurons including the output layer
+	vector<NeuronLayer>	m_vecLayers;
+
+public:
+	NeuralNetwork(int numInputs, int numHidden, int numOutputs, int numPerHidden);
+	void CreateNet();
+
+	//gets the weights from the NN
+	vector<double>	getWeights()const;
+
+	//returns total number of weights in net
+	int	GetNumberOfWeights()const;
+
+	//replaces the weights with new ones
+	void setWeights(vector<double> &weights);
+
+	//calculates the outputs from a set of inputs
+	vector<double> update(vector<double> &inputs);
+
+	//sigmoid response curve
+	inline double Sigmoid(double activation, double response);
+	void mutateWeights();
+};
