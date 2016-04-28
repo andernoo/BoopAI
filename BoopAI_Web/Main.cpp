@@ -86,7 +86,11 @@ int main()
 			//server.send is an asynchronous function
 			server.send(a_connection, send_stream);
 		}
+#ifdef WIN32
 		Sleep(1000);
+#else
+		sleep(1000);
+#endif
 	}
 	server_thread.join();
 
