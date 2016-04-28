@@ -122,7 +122,7 @@ void Boop::update()
 	{
 		if(fixture->IsSensor())
 		{
-			inputs.push_back((int)fixture->GetUserData());
+			inputs.push_back((int)fixture->GetUserData()>0?1:-1);
 		}
 	}
 

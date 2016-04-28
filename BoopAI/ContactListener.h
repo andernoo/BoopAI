@@ -8,12 +8,12 @@ class ContactListener : public b2ContactListener
 	{
 		if (contact->GetFixtureA()->IsSensor())
 		{
-			contact->GetFixtureA()->SetUserData((void*)1);
+			contact->GetFixtureA()->SetUserData((void*)((int)contact->GetFixtureA()->GetUserData()+1));
 			return;
 		}
 		else if (contact->GetFixtureB()->IsSensor())
 		{
-			contact->GetFixtureB()->SetUserData((void*)1);
+			contact->GetFixtureB()->SetUserData((void*)((int)contact->GetFixtureB()->GetUserData() + 1));
 			return;
 		}
 
@@ -30,8 +30,8 @@ class ContactListener : public b2ContactListener
 	void EndContact(b2Contact* contact)
 	{
 		if (contact->GetFixtureA()->IsSensor())
-			contact->GetFixtureA()->SetUserData((void*)-1);
+			contact->GetFixtureA()->SetUserData((void*)((int)contact->GetFixtureA()->GetUserData() - 1));
 		if (contact->GetFixtureB()->IsSensor())
-			contact->GetFixtureB()->SetUserData((void*)-1);
+			contact->GetFixtureB()->SetUserData((void*)((int)contact->GetFixtureB()->GetUserData() - 1));
 	}
 };
