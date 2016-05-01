@@ -2,7 +2,7 @@
 #include <vector>
 #include <ctime>
 #include "NeuralNetwork.h"
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 
 #define NUM_INPUTS 4
 #define NUM_OUTPUTS 7

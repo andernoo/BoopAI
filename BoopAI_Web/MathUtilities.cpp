@@ -1,5 +1,4 @@
 #include "MathUtilities.h"
-#include <Box2D\Box2D.h>
 
 float mathRandom(float min, float max)
 {

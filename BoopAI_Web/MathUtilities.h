@@ -3,7 +3,7 @@
 #include <stdio.h>
 #define _USE_MATH_DEFINES 
 #include <cmath>
-#include <Box2D\Box2D.h>
+#include <Box2D/Box2D.h>
 
 float mathRandom(float min, float max);
 double pointDistance(b2Vec2 one, b2Vec2 two);
