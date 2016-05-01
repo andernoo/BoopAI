@@ -21,6 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3DECCEA9-ED43-4A42-941F-28C80732262E}</ProjectGuid>
     <RootNamespace>BoopAI_Web</RootNamespace>
+    <ProjectName>BoopAI_Server</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -68,19 +70,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\Box2D;C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
     <LibraryPath>C:\OpenSSL-Win64\lib\VC\static;D:\local\boost_1_61_0_b1\lib64-msvc-14.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\Box2D;C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
     <LibraryPath>C:\OpenSSL-Win64\lib\VC\static;D:\local\boost_1_61_0_b1\lib64-msvc-14.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\Box2D;C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
     <LibraryPath>C:\OpenSSL-Win64\lib\VC\static;D:\local\boost_1_61_0_b1\lib64-msvc-14.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Users\Andrew\Documents\GitHubVisualStudio\BoopAI\Box2D;C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;$(IncludePath)</IncludePath>
     <LibraryPath>C:\OpenSSL-Win64\lib\VC\static;D:\local\boost_1_61_0_b1\lib64-msvc-14.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -93,7 +95,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,9 +106,11 @@
       <AdditionalIncludeDirectories>C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32_WINNT=0xA00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,7 +127,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libeay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MTd.lib;ssleay32MTd.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,27 +137,41 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\local\boost_1_61_0_b1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\OpenSSL-Win64\include;D:\local\boost_1_61_0_b1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32_WINNT=0xA00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libeay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libeay32MT.lib;ssleay32MT.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boop.cpp" />
+    <ClCompile Include="BoopPlanet.cpp" />
+    <ClCompile Include="BoopUniverse.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MathUtilities.cpp" />
+    <ClCompile Include="NeuralNetwork.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="client_ws.hpp" />
-    <ClInclude Include="client_wss.hpp" />
+    <ClInclude Include="Boop.h" />
+    <ClInclude Include="BoopPlanet.h" />
+    <ClInclude Include="BoopUniverse.h" />
     <ClInclude Include="crypto.hpp" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="MathUtilities.h" />
+    <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="server_ws.hpp" />
     <ClInclude Include="server_wss.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Box2D\Build\vs2013\Box2D.vcxproj">
+      <Project>{98400d17-43a5-1a40-95be-c53ac78e7694}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

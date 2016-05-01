@@ -1,6 +1,9 @@
 #include "server_ws.hpp"
-#include "Main.h"
+#include <memory>
+#include "BoopUniverse.h"
 #include "json.hpp"
+#include "MathUtilities.h"
+#include "Main.h"
 
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
 
@@ -11,21 +14,15 @@ typedef SimpleWeb::SocketServer<SimpleWeb::WS> WssServer;
 
 int main()
 {
+	srand(time(NULL));
 	//WebSocket Secure (WSS)-server at port 8080 using 4 threads
 	//WssServer server(2213, 4, "anooserve.com.crt", "anooserve.com.key");
 	WssServer server(2213, 4);
-
-	//Example 1: echo WebSocket Secure endpoint
-	//  Added debug messages for example use of the callbacks
-	//  Test with the following JavaScript:
-	//    var wss=new WebSocket("wss://localhost:8080/echo");
-	//    wss.onmessage=function(evt){console.log(evt.data);};
-	//    wss.send("test");
 	auto& echo = server.endpoint["^/boop/?$"];
 
 	echo.onmessage = [&server](shared_ptr<WssServer::Connection> connection, shared_ptr<WssServer::Message> message)
 	{
-		//WssServer::Message::string() is a convenience function for:
+		/*//WssServer::Message::string() is a convenience function for:
 		//stringstream data_ss;
 		//data_ss << message->rdbuf();
 		//auto message_str = data_ss.str();
@@ -46,7 +43,7 @@ int main()
 					//See http://www.boost.org/doc/libs/1_55_0/doc/html/boost_asio/reference.html, Error Codes for error code meanings
 					"Error: " << ec << ", error message: " << ec.message() << endl;
 			}
-		});
+		});*/
 	};
 
 	echo.onopen = [](shared_ptr<WssServer::Connection> connection)
@@ -73,26 +70,44 @@ int main()
 		server.start();
 	});
 
+	BoopUniverse* universe = new BoopUniverse();
+	universe->addPlanet(4);
+	float angle = 0;
+	std::chrono::milliseconds deltaTime;
+	std::chrono::high_resolution_clock::time_point lastRun = std::chrono::high_resolution_clock::now();
 	while(1)
 	{
-		json j;
-		j["count"] = server.get_connections().size();
+		universe->step();
 
-		for(auto a_connection : server.get_connections())
+		deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock().now() - lastRun);
+		if(deltaTime.count() > 17)
 		{
-			auto send_stream = std::make_shared<WssServer::SendStream>();
-			*send_stream << j.dump();
+			json j;
+			j["count"] = server.get_connections().size();
+			std::vector<Boop*> boops = universe->getPlanet(0)->getBoops();
+			for(auto i = boops.begin(); i != boops.end(); i++)
+			{
+				Boop* boop = (*i);
+				j["boops"][boop->id]["id"] = boop->id;
+				j["boops"][boop->id]["x"] = boop->body->GetPosition().x;
+				j["boops"][boop->id]["y"] = boop->body->GetPosition().y;
+				j["boops"][boop->id]["angle"] = boop->body->GetAngle();
+				j["boops"][boop->id]["r"] = boop->colour.x;
+				j["boops"][boop->id]["g"] = boop->colour.y;
+				j["boops"][boop->id]["b"] = boop->colour.z;
 
-			//server.send is an asynchronous function
-			server.send(a_connection, send_stream);
+			}
+
+			for(auto a_connection : server.get_connections())
+			{
+				auto send_stream = std::make_shared<WssServer::SendStream>();
+				*send_stream << j.dump();
+				server.send(a_connection, send_stream);
+			}
+			lastRun = std::chrono::high_resolution_clock().now();
 		}
-#ifdef WIN32
-		Sleep(1000);
-#else
-		sleep(1);
-#endif
 	}
-	server_thread.join();
 
+	server_thread.join();
 	return 0;
 }
