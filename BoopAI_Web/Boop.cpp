@@ -1,5 +1,6 @@
 #include "Boop.h"
 #include "MathUtilities.h"
+#include <Box2D/Box2D.h>
 
 Boop::Boop(b2World* world, int id) :
 	id(id)

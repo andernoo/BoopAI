@@ -1,0 +1,2 @@
+/home/andrew/BoopAI/Box2D/Build/Box2D/CMakeFiles/Box2D.dir
+/home/andrew/BoopAI/Box2D/Build/Box2D/CMakeFiles/Box2D_shared.dir
