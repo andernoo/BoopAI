@@ -2,7 +2,8 @@
 
 
 
-BoopUniverse::BoopUniverse()
+BoopUniverse::BoopUniverse(SimpleWeb::SocketServer<SimpleWeb::WS> *server) :
+	server(server)
 {
 }
 
@@ -26,5 +27,5 @@ BoopPlanet* BoopUniverse::getPlanet(int planetId)
 
 void BoopUniverse::addPlanet(int numBoops)
 {
-	planets.push_back(new BoopPlanet(numBoops));
+	planets.push_back(new BoopPlanet(numBoops, server));
 }

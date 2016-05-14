@@ -2,12 +2,16 @@
 #include "MathUtilities.h"
 #include <iostream>
 #include <iomanip>
+#include <memory>
+#include "json.hpp"
 
-BoopPlanet::BoopPlanet(int numBoops)
+using json = nlohmann::json;
+
+BoopPlanet::BoopPlanet(int numBoops, SimpleWeb::SocketServer<SimpleWeb::WS>* server) :
+	server(server)
 {
 	world = new b2World(b2Vec2(0, 0));
-	for(int i = 0; i < numBoops; i++)
-	{
+	for(int i = 0; i < numBoops; i++) {
 		boops.push_back(new Boop(world, i));
 	}
 
@@ -60,21 +64,40 @@ BoopPlanet::~BoopPlanet()
 
 void BoopPlanet::step()
 {
-	for(auto i = boops.begin(); i != boops.end(); i++)
-	{
-		(*i)->step();
-	}
-
+	updateServer(boops, server);
 	deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock().now() - lastRun);
-	accumulator += deltaTime.count()/100;
+	accumulator += deltaTime.count() / 100;
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;
-	float step = 1.0 / 60.0;
-	while(accumulator >= step)
-	{
+	float step = 1.0f / 60.0f;
+	while(accumulator >= step) {
 		world->Step(step, velocityIterations, positionIterations);
 		accumulator -= step;
 		lastRun = std::chrono::high_resolution_clock().now();
+	}
+} 
+
+void BoopPlanet::updateServer(std::vector<Boop*> boops, SimpleWeb::SocketServer<SimpleWeb::WS>* server)
+{
+	json j;
+	for(auto i = boops.begin(); i != boops.end(); i++) {
+		(*i)->step();
+		Boop* boop = (*i);
+		j["boops"][boop->id]["id"] = boop->id;
+		j["boops"][boop->id]["x"] = boop->body->GetPosition().x;
+		j["boops"][boop->id]["y"] = boop->body->GetPosition().y;
+		j["boops"][boop->id]["vx"] = boop->body->GetLinearVelocity().x;
+		j["boops"][boop->id]["vy"] = boop->body->GetLinearVelocity().y;
+		j["boops"][boop->id]["angle"] = boop->body->GetAngle();
+		j["boops"][boop->id]["r"] = boop->colour.x;
+		j["boops"][boop->id]["g"] = boop->colour.y;
+		j["boops"][boop->id]["b"] = boop->colour.z;
+	}
+
+	for(auto a_connection : server->get_connections()) {
+		auto send_stream = std::make_shared<SimpleWeb::SocketServer<SimpleWeb::WS>::SendStream>();
+		*send_stream << j.dump();
+		server->send(a_connection, send_stream);
 	}
 }
 

@@ -8,7 +8,7 @@ Boop::Boop(b2World* world, int id) :
 	spawned = std::clock();
 	b2BodyDef myBodyDef;
 	myBodyDef.type = b2_dynamicBody;
-	myBodyDef.position.Set(mathRandom(30, WIDTH-30), mathRandom(30, HEIGHT-30));
+	myBodyDef.position.Set(mathRandom(30, WIDTH - 30), mathRandom(30, HEIGHT - 30));
 	myBodyDef.angle = mathRandom(0, 359);
 	body = world->CreateBody(&myBodyDef);
 	body->SetUserData(this);
@@ -18,6 +18,7 @@ Boop::Boop(b2World* world, int id) :
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
+	fixtureDef.density = 1;
 	body->CreateFixture(&fixtureDef);
 
 	b2PolygonShape polyShape;
@@ -54,18 +55,27 @@ Boop::~Boop()
 
 void Boop::step()
 {
+	if(health <= 0) {
+		colour.x = 0.09f;
+		colour.y = 0.09f;
+		colour.z = 0.09f;
+		return;
+	} else {
+		//health -= 0.005f;
+	}
+
 	inputs.clear();
-	inputs.push_back(0);
-	inputs.push_back(1);
-	inputs.push_back(0);
-	inputs.push_back(1);
+	inputs.push_back(mathRandom(-1.0f, 1.0f));
+	inputs.push_back(mathRandom(-1.0f, 1.0f));
+	inputs.push_back(mathRandom(-1.0f, 1.0f));
+	inputs.push_back(mathRandom(-1.0f, 1.0f));
 
 	outputs = nn->update(inputs);
 
-	b2Vec2 force((outputs[0]>outputs[1]?1:-1) * cos(body->GetAngle()), (outputs[0]>outputs[1] ? 1 : -1) * sin(body->GetAngle()));
+	b2Vec2 force((outputs[0] > outputs[1] ? 1 : -1) * cos(body->GetAngle()), (outputs[0] > outputs[1] ? 1 : -1) * sin(body->GetAngle()));
 	body->ApplyForce(force, body->GetPosition(), true);
 
-	body->ApplyTorque((outputs[2]>outputs[3] ? 100 : -100), true);
+	body->ApplyTorque((outputs[2] > outputs[3] ? 100.0f : -100.0f), true);
 
 	colour.x = (float)outputs[4] + 0.1f;
 	colour.y = (float)outputs[5] + 0.1f;

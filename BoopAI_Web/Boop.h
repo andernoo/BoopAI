@@ -10,6 +10,7 @@
 #define NUM_PER_HIDDEN 5
 class Boop
 {
+	float health = 1000;
 	std::clock_t spawned;
 	std::vector<double> inputs, outputs;
 	NeuralNetwork* nn = new NeuralNetwork(NUM_INPUTS, NUM_HIDDEN, NUM_OUTPUTS, NUM_PER_HIDDEN);
