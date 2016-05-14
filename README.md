@@ -1,3 +1,4 @@
+[![Build Status](http://anooserve.com:2288/job/BoopAI/badge/icon)](http://anooserve.com:2288/job/BoopAI/)
 # BoopAI
 ##A neural network with genetic algorithms experiment
 Little creatures that evolve using a Neural Network "brain". The plan is for a few "tournaments" to run simultaneously and report back to a master "world" controller which will handle the selective breeding of boops to increase their inteligence.
