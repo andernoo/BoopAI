@@ -5,7 +5,7 @@ project (boopai)
 ADD_DEFINITIONS(-std=c++11)
 
 # add the executable
-add_executable(boopai MathUtilities.cpp NeuralNetwork.cpp Boop.cpp BoopPlanet.cpp BoopUniverse.cpp Main.cpp)
+add_executable(boopai-server MathUtilities.cpp NeuralNetwork.cpp Boop.cpp BoopPlanet.cpp BoopUniverse.cpp Main.cpp)
 
 target_link_libraries(boopai pthread boost_system boost_regex crypto ssl Box2D)
 
